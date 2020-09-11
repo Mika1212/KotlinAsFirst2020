@@ -208,25 +208,16 @@ fun collatzSteps(x: Int): Int {
  * Использовать kotlin.math.sin и другие стандартные реализации функции синуса в этой задаче запрещается.
  */
 fun sin(x: Double, eps: Double): Double {
-    var a = 100.0
-    var y = abs(x)
+    val xNormal = x % (2.0 * PI)
+    var result = xNormal
     var n = 3
-    val k1 = if (x >= 0) 1 else -1
-    var k = 1
-    var y1 = 0.0
-    while (y > 2.0 * PI) {
-        y -= 2.0 * PI
-    }
-    y *= k1
-    y1 = y
+    var x1 = -xNormal.pow(3.0) / factorial(n)
     do {
-        a = pow(y1, n.toDouble()) / factorial(n)
-        if (k % 2 == 1) y -= a
-        else y += a
-        k++
+        result += x1
         n += 2
-    } while (abs(a) > eps)
-    return y - a
+        x1 *= ((-1) * xNormal * xNormal) / n / (n - 1)
+    } while (abs(x1) >= eps)
+    return result
 }
 
 /**
@@ -332,31 +323,22 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun squareSequenceDigit(n: Int): Int {
-    var k = 1
-    var k1 = 0
-    var a = 1
-    var i = 1
-    var j = 0
-
-    while (k1 < n) {
-        if (k1 == n) break
-        j = 0
-        k = i * i
-        while (k > 0) {
-            k /= 10
-            j++
+    var k = 0
+    for (i in 1..n) {
+        val number = i * i
+        var j = digitNumber(number)
+        if (k + j > n) {
+            var numberFake = number
+            for (i in 1..n) {
+                k++
+                if (k == n) return numberFake / 10.0.pow(j - 1.toDouble()).toInt() else
+                    numberFake %= 10.0.pow(j - 1.toDouble()).toInt()
+            }
         }
-        k = i * i
-        i++
-        while (j > 0) {
-            a = k / pow(10.0, (j - 1).toDouble()).toInt() % 10
-            k1++
-            k %= pow(10.0, (j - 1).toDouble()).toInt()
-            j--
-            if (k1 == n) break
-        }
+        k += j
+        if (k == n) return number % 10
     }
-    return a
+    return k
 }
 
 /**
@@ -369,30 +351,21 @@ fun squareSequenceDigit(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun fibSequenceDigit(n: Int): Int {
-    var k = 1
-    var k1 = 0
-    var a = 1
-    var i = 1
-    var j = 0
-
-    while (k1 < n) {
-        if (k1 == n) break
-        j = 0
-        k = fib(i)
-        while (k > 0) {
-            k /= 10
-            j++
+    var k = 0
+    for (i in 1..n) {
+        val number = fib(i)
+        var j = digitNumber(number)
+        if (k + j > n) {
+            var numberFake = number
+            for (i in 1..n) {
+                k++
+                if (k == n) return numberFake / 10.0.pow(j - 1.toDouble()).toInt() else
+                    numberFake %= 10.0.pow(j - 1.toDouble()).toInt()
+            }
         }
-        k = fib(i)
-        i++
-        while (j > 0) {
-            a = k / pow(10.0, (j - 1).toDouble()).toInt() % 10
-            k1++
-            k %= pow(10.0, (j - 1).toDouble()).toInt()
-            j--
-            if (k1 == n) break
-        }
+        k += j
+        if (k == n) return number % 10
     }
-    return a
+    return k
 }
 

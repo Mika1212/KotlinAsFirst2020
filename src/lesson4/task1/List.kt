@@ -3,7 +3,6 @@
 package lesson4.task1
 
 import lesson1.task1.discriminant
-import kotlin.math.max
 import kotlin.math.sqrt
 
 /**
@@ -117,7 +116,8 @@ fun buildSumExample(list: List<Int>) = list.joinToString(separator = " + ", post
  * Модуль пустого вектора считать равным 0.0.
  */
 fun abs(v: List<Double>): Double =
-    sqrt(v.map { it * it }.fold(0.0) { previousResult, element -> previousResult + element })
+    sqrt(v.map { it * it }.sum())
+//sqrt(v.map { it * it }.fold(0.0) { previousResult, element -> previousResult + element })
 
 /**
  * Простая
@@ -156,7 +156,7 @@ fun center(list: MutableList<Double>): MutableList<Double> {
  */
 fun times(a: List<Int>, b: List<Int>): Int {
     var c = 0
-    for (i in 0 until b.size) c += a[i] * b[i]
+    for (i in b.indices) c += a[i] * b[i]
     return c
 }
 
@@ -169,10 +169,9 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Значение пустого многочлена равно 0 при любом x.
  */
 fun polynom(p: List<Int>, x: Int): Int {
-    val a = p
     var b = 1
-    return a.fold(0) { previousResult, element ->
-        if (b != 1 || previousResult != 0) b = b * x
+    return p.fold(0) { previousResult, element ->
+        if (b != 1 || previousResult != 0) b *= x
         previousResult + element * b
     }
 }
@@ -204,17 +203,15 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  * Множители в списке должны располагаться по возрастанию.
  */
 fun factorize(n: Int): List<Int> {
-    var a = 2
-    var n1 = n
+    var number = n
     val list = mutableListOf<Int>()
-    while (n1 > 1) {
-        if (n1 % a == 0) {
-            while (n1 % a == 0) {
-                list.add(a)
-                n1 /= a
+    while (number > 1) {
+        for (i in 2..number)
+            if (number % i == 0) {
+                list.add(i)
+                number /= i
+                break
             }
-        }
-        a++
     }
     return list
 }
@@ -237,13 +234,39 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  */
 fun convert(n: Int, base: Int): List<Int> {
     val list = mutableListOf<Int>()
-    var n1 = n
-    do {
-        list.add(0, n1 % base)
-        n1 /= base
-    } while (n1 > 0)
-    return list
+    var number = n
+    while (number > 0) {
+        val digit = number % base
+        list.add(digit)
+        number /= base
+    }
+    val list1 = mutableListOf<Int>()
+    if (list.isNotEmpty())
+        for (i in 0 until list.size) {
+            list1.add(list[list.size - i - 1])
+        }
+    return list1
 }
+
+/* Подскажите, пожалуйста, почему эта программа выполнялась неправильно?
+Я попытался перевернуть список, но не вышло.
+{
+    val list = mutableListOf<Int>()
+    var digit = 0
+    var number = n
+    while (number > 0) {
+        digit = number % base
+        list.add(digit)
+        number /= base
+    }
+    val list1 = mutableListOf<Int>()
+    if (list.isNotEmpty())
+        for (i in 0 until list.size) {
+            list1.add(list[list.size - i-1])
+        }
+    return list1
+}
+ */
 
 /**
  * Сложная
@@ -257,13 +280,13 @@ fun convert(n: Int, base: Int): List<Int> {
  * (например, n.toString(base) и подобные), запрещается.
  */
 
-fun convertToStringHelper(number: Int): String {
-    return if (number < 10) "$number"
+fun convertToStringHelper(number: Int): String =
+    if (number < 10) "$number"
     else {
         val a = 'a' + number - 10
         a.toString()
     }
-}
+
 
 fun convertToString(n: Int, base: Int): String {
     val result = mutableListOf<String>()
