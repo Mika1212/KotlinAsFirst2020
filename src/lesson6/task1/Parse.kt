@@ -187,6 +187,7 @@ fun dateDigitToStr(digital: String): String {
                 }
             }
         }
+
         result.add(a[0])
         if (result[0].toInt() < 10) result[0] = result[0].toInt().toString()
         if (a[1].toInt() < 1) return ""
