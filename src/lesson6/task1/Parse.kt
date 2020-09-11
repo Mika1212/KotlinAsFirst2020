@@ -174,7 +174,7 @@ fun dateDigitToStr(digital: String): String {
             "ноября",
             "декабря"
         )
-        if (a.size > 3) return ""
+        if (a.size != 3) return ""
         val result = mutableListOf<String>()
         for (i in 1..12) {
             if (a[1].toInt() > 12) return ""
