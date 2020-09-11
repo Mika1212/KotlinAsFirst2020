@@ -329,10 +329,11 @@ fun squareSequenceDigit(n: Int): Int {
         var j = digitNumber(number)
         if (k + j > n) {
             var numberFake = number
-            for (i in 1..n) {
+            for (l in 1..n) {
                 k++
                 if (k == n) return numberFake / 10.0.pow(j - 1.toDouble()).toInt() else
                     numberFake %= 10.0.pow(j - 1.toDouble()).toInt()
+                j--
             }
         }
         k += j
@@ -357,10 +358,11 @@ fun fibSequenceDigit(n: Int): Int {
         var j = digitNumber(number)
         if (k + j > n) {
             var numberFake = number
-            for (i in 1..n) {
+            for (l in 1..n) {
                 k++
                 if (k == n) return numberFake / 10.0.pow(j - 1.toDouble()).toInt() else
                     numberFake %= 10.0.pow(j - 1.toDouble()).toInt()
+                j--
             }
         }
         k += j

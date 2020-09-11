@@ -190,7 +190,7 @@ class Tests {
     @Test
     @Tag("4")
     fun convertToString() {
-        assertEquals("1", convertToString(1, 2))
+        assertEquals("0", convertToString(0, 2))
         assertEquals("1210", convertToString(100, 4))
         assertEquals("13c", convertToString(250, 14))
         assertEquals("2ec", convertToString(1000, 19))

@@ -244,7 +244,8 @@ fun convert(n: Int, base: Int): List<Int> {
     if (list.isNotEmpty())
         for (i in 0 until list.size) {
             list1.add(list[list.size - i - 1])
-        }
+        } else
+        list1.add(0)
     return list1
 }
 
@@ -293,6 +294,7 @@ fun convertToString(n: Int, base: Int): String {
     for (i in convert(n, base)) {
         result.add(convertToStringHelper(i))
     }
+    if (result.isEmpty()) result.add("0")
     return result.joinToString(separator = "")
 }
 
