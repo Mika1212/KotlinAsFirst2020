@@ -225,14 +225,6 @@ fun flattenPhoneNumber(phone: String): String {
     return phone.toList().filter(fun(it: Char) = it in ('0'..'9') || it == '+').joinToString(separator = "")
 }
 
-/*
-Объясните, пожалуйста, почему эта программа всегда выдает null
-{
-    val a = Regex("""(0 -9, +)""").find(phone)
-    return a.toString()
-}
-*/
-
 /**
  * Средняя
  *
@@ -387,6 +379,7 @@ fun fromRoman(roman: String): Int {
     val romanMod = listOf(" ", roman, " ").joinToString(separator = "")
     val set = setOf('I', 'V', 'X', 'C', 'D', 'M', 'L', ' ')
     for (i in romanMod) if (i !in set) return -1
+    if (roman.isEmpty()) return -1
     try {
         for (i in 1 until romanMod.length - 1) {
             when {
