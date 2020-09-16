@@ -449,9 +449,7 @@ fun computeDeviceCellsHelper(
     limit: Int,
     cells: Int,
     number: Int
-): MutableList<Int>? = TODO()
-/*
-{
+): MutableList<Int>? {
     var limiter = limit
     var i = number
     var tF = false
@@ -568,4 +566,3 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     }
     return result
 }
-*/
