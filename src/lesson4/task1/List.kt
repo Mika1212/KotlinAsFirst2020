@@ -240,6 +240,7 @@ fun convert(n: Int, base: Int): List<Int> {
         list.add(digit)
         number /= base
     }
+    if (list.isEmpty()) list.add(0)
     return list.reversed()
 }
 
