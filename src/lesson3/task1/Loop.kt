@@ -4,7 +4,6 @@ package lesson3.task1
 
 
 import lesson1.task1.sqr
-import java.lang.Math.pow
 import kotlin.math.*
 
 /**
@@ -90,7 +89,7 @@ fun fib(n: Int): Int {
     var n1 = n
     var f1 = 0
     var f2 = 1
-    var a = 0
+    var a: Int
     while (n1 - 1 > 0) {
         a = f2
         f2 += f1
@@ -211,7 +210,7 @@ fun sin(x: Double, eps: Double): Double {
     val xNormal = x % (2.0 * PI)
     var result = xNormal
     var n = 3
-    var x1 = -xNormal.pow(3.0) / factorial(n)
+    var x1 = -xNormal.pow(n.toDouble()) / factorial(n)
     do {
         result += x1
         n += 2
@@ -230,25 +229,16 @@ fun sin(x: Double, eps: Double): Double {
  * Использовать kotlin.math.cos и другие стандартные реализации функции косинуса в этой задаче запрещается.
  */
 fun cos(x: Double, eps: Double): Double {
-    var a = 100.0
-    var y = abs(x)
+    val xNormal = x % (2.0 * PI)
+    var result = 1.0
     var n = 2
-    val k1 = if (abs(x) <= PI) 1 else -1
-    var k = 1
-    var y1 = 0.0
-    while (y > 2.0 * PI) {
-        y -= 2.0 * PI
-    }
-    y1 = k1 * y
-    y = 1.0
+    var x1 = -xNormal.pow(n.toDouble()) / factorial(n)
     do {
-        a = pow(y1, n.toDouble()) / factorial(n)
-        if (k % 2 == 1) y -= a
-        else y += a
-        k++
+        result += x1
         n += 2
-    } while (abs(a) > eps)
-    return y + a
+        x1 *= ((-1) * xNormal * xNormal) / n / (n - 1)
+    } while (abs(x1) >= eps)
+    return result
 }
 
 /**
@@ -279,7 +269,7 @@ fun revert(n: Int): Int {
  */
 fun isPalindrome(n: Int): Boolean {
     var n1 = n
-    var a = 0
+    var a: Int
     var n2 = n
     var j = 1
     while (n1 > 0) {

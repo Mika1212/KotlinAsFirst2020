@@ -206,11 +206,11 @@ fun factorize(n: Int): List<Int> {
     var number = n
     val list = mutableListOf<Int>()
     while (number > 1) {
-        for (i in 2..number)
-            if (number % i == 0) {
+        for (i in 2..n)
+            while (number % i == 0) {
                 list.add(i)
                 number /= i
-                break
+                if (number == 1) break
             }
     }
     return list
@@ -240,13 +240,7 @@ fun convert(n: Int, base: Int): List<Int> {
         list.add(digit)
         number /= base
     }
-    val list1 = mutableListOf<Int>()
-    if (list.isNotEmpty())
-        for (i in 0 until list.size) {
-            list1.add(list[list.size - i - 1])
-        } else
-        list1.add(0)
-    return list1
+    return list.reversed()
 }
 
 /* Подскажите, пожалуйста, почему эта программа выполнялась неправильно?
