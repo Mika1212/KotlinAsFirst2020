@@ -74,73 +74,34 @@ fun main() {
  */
 fun dateStrToDigit(str: String): String {
     try {
-        val a = str.split(" ")
+        val data = str.split(" ")
         val result = mutableListOf<String>()
-        when {
-            a[1] == "января" -> {
-                if (a[0] < 0.toString() || a[0] > 31.toString()) return ""
-                result.add(a[0])
-                result.add("01")
-            }
-            a[1] == "февраля" -> {
-                if (daysInMonth(2, a[2].toInt()) < a[0].toInt()) return ""
-                result.add(a[0])
-                result.add("02")
-            }
-            a[1] == "марта" -> {
-                if (a[0] < 0.toString() || a[0] > 31.toString()) return ""
-                result.add(a[0])
-                result.add("03")
-            }
-            a[1] == "апреля" -> {
-                if (a[0] < 0.toString() || a[0] > 30.toString()) return ""
-                result.add(a[0])
-                result.add("04")
-            }
-            a[1] == "мая" -> {
-                if (a[0] < 0.toString() || a[0] > 31.toString()) return ""
-                result.add(a[0])
-                result.add("05")
-            }
-            a[1] == "июня" -> {
-                if (a[0] < 0.toString() || a[0] > 30.toString()) return ""
-                result.add(a[0])
-                result.add("06")
-            }
-            a[1] == "июля" -> {
-                if (a[0] < 0.toString() || a[0] > 31.toString()) return ""
-                result.add(a[0])
-                result.add("07")
-            }
-            a[1] == "августа" -> {
-                if (a[0] < 0.toString() || a[0] > 31.toString()) return ""
-                result.add(a[0])
-                result.add("08")
-            }
-            a[1] == "сентября" -> {
-                if (a[0] < 0.toString() || a[0] > 30.toString()) return ""
-                result.add(a[0])
-                result.add("09")
-            }
-            a[1] == "октября" -> {
-                if (a[0] < 0.toString() || a[0] > 31.toString()) return ""
-                result.add(a[0])
-                result.add("10")
-            }
-            a[1] == "ноября" -> {
-                if (a[0] < 0.toString() || a[0] > 30.toString()) return ""
-                result.add(a[0])
-                result.add("11")
-            }
-            a[1] == "декабря" -> {
-                if (a[0] < 0.toString() || a[0] > 31.toString()) return ""
-                result.add(a[0])
-                result.add("12")
-            }
-            else -> return ""
-        }
-        if (result[0].toInt() < 10 && result[0][0] != '0') result[0] = 0.toString() + result[0]
-        if (a[2] >= 0.toString()) result.add(a[2]) else return ""
+        val dataMonth = mutableMapOf(
+            "января" to 1,
+            "февраля" to 2,
+            "марта" to 3,
+            "апреля" to 4,
+            "мая" to 5,
+            "июня" to 6,
+            "июля" to 7,
+            "августа" to 8,
+            "сентября" to 9,
+            "октября" to 10,
+            "ноября" to 11,
+            "декабря" to 12
+        )
+        if (data[1] !in dataMonth) return ""
+        if (daysInMonth(dataMonth[data[1]]!!, data[2].toInt()) < data[0].toInt()) return ""
+        if (data[2].toInt() < 0) return ""
+        if (data[0].toInt() > 9)
+            result.add(data[0])
+        else
+            result.add("0" + data[0])
+        if (dataMonth[data[1]]!! > 9)
+            result.add(dataMonth[data[1]].toString())
+        else
+            result.add("0" + dataMonth[data[1]])
+        result.add(data[2])
         return result.joinToString(separator = ".")
     } catch (e: IndexOutOfBoundsException) {
         return ""
@@ -179,12 +140,8 @@ fun dateDigitToStr(digital: String): String {
         for (i in 1..12) {
             if (a[1].toInt() > 12) return ""
             if (a[1].toInt() == i) {
-                if (i == 2) {
-                    if (daysInMonth(2, a[2].toInt()) < a[0].toInt()) return ""
-                } else {
-                    if (i < 8 && ((i % 2 == 0 && a[0].toInt() > 30) || (i % 2 == 1 && a[0].toInt() > 31))) return ""
-                    if (i > 7 && ((i % 2 == 0 && a[0].toInt() > 31) || (i % 2 == 1 && a[0].toInt() > 30))) return ""
-                }
+                if (daysInMonth(i, a[2].toInt()) < a[0].toInt()) return ""
+
             }
         }
 
@@ -217,12 +174,9 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-    val set = setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '-', '(', ')', ' ')
-    for (i in 0 until phone.length) {
-        if (phone[i] == '(' && phone[i + 1] !in ('0'..'9')) return ""
-        if (phone[i] !in set) return ""
-    }
-    return phone.toList().filter(fun(it: Char) = it in ('0'..'9') || it == '+').joinToString(separator = "")
+    if ("(" in phone && ")" !in phone || ")" in phone && "(" !in phone) return ""
+    if (!phone.matches(Regex("""\+?\s*\d*\s*(\(?[ \-0-9+]+\)?)?\s*[ \-0-9+]*"""))) return ""
+    return Regex("""[ \-()]""").split(phone).joinToString(separator = "")
 }
 
 /**
@@ -236,17 +190,17 @@ fun flattenPhoneNumber(phone: String): String {
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
 fun bestLongJump(jumps: String): Int {
-    return try {
+    try {
         val set = setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '%', ' ')
         for (i in jumps) if (i !in set) return -1
-        val a = jumps.split(" ").filter(fun(it: String) = it in ("0".."9"))
+        val a = jumps.split(" ").filter { it in "0".."9" }
         var a1 = a[0]
         for (length in a) if (length.toInt() > a1.toInt()) a1 = length
-        a1.toInt()
+        return a1.toInt()
     } catch (e: IndexOutOfBoundsException) {
-        -1
+        return -1
     } catch (e: KotlinNullPointerException) {
-        -1
+        return -1
     }
 }
 
@@ -318,8 +272,8 @@ fun plusMinus(expression: String): Int {
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int {
-    return try {
+fun firstDuplicateIndex(str: String): Int =
+    try {
         val a = str.split(" ")
         var j = 0
         for (i in 0 until a.size) {
@@ -330,7 +284,7 @@ fun firstDuplicateIndex(str: String): Int {
     } catch (e: IndexOutOfBoundsException) {
         -1
     }
-}
+
 
 /**
  * Сложная
@@ -443,126 +397,6 @@ fun fromRoman(roman: String): Int {
  *
  */
 
-fun computeDeviceCellsHelper(
-    result: MutableList<Int>,
-    commands: String,
-    limit: Int,
-    cells: Int,
-    number: Int
-): MutableList<Int>? {
-    var limiter = limit
-    var i = number
-    var tF = false
-    val sender = mutableListOf<Char>()
-    while (!tF) {
-        var kRight = 0
-        var kLeft = 1
-        for ((u, command) in commands.withIndex()) {
-            sender.clear()
-            if (kLeft - kRight == 1) {
-                i += if (command == '>') 1 else if (command == '<') -1 else 0
-                result[i] += if (command == '+') 1 else if (command == '-') -1 else 0
-            }
-            if (command == '[') {
-                var kRight1 = 0
-                var kLeft1 = 0
-                kLeft++
-                if (result[i] != 0) {
-                    for (j in u + 1 until commands.length) {
-                        sender += commands[j]
-                        if (commands[j] == ']') {
-                            kRight1++
-                            if (kLeft1 == kRight1) break
-                        }
-                        if (commands[j] == '[') kLeft1++
-                    }
-                    computeDeviceCellsHelper(result, sender.joinToString(separator = ""), limiter, cells, i)
-                }
-            }
-            if (command == ']') {
-                kRight++
-                if (kLeft == kRight) break
-                else
-                    if (result[i] == 0) {
-                        tF = true
-                        break
-                    }
-            }
-            limiter -= 1
-            if (i < 0 || i > cells || limiter <= 0) return null
-        }
-        if (result[i] == 0) tF = true
-    }
-    return (result + i).toMutableList()
-}
-
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    var kLeft = 0
-    var kRight = 0
-    val e1 = IllegalArgumentException()
-    val e2 = IllegalStateException()
-    val sender = mutableListOf<Char>()
-    val set = setOf('>', '<', '-', '+', ' ', '[', ']')
-    for (u in commands) {
-        if (u !in set) throw e1
-        if (u == '[') kLeft++
-        if (u == ']') kRight++
-    }
-    if (kLeft != kRight) throw e1
-    kLeft = 0
-    kRight = 0
-    var limiter = limit
-    var i = cells / 2
-    val result1 = mutableListOf<Int>()
-    for (u in 0 until cells) result1 += 0
-    var result = result1
-    for ((u, command) in commands.withIndex()) {                                             // Создаю цикл, перебираю все значения
-        if (kLeft == kRight) {
-            val g = if (command == '<') -1 else if (command == '>') 1 else 0
-            i += g
-            val count = if (command == '-') -1 else if (command == '+') 1 else 0
-            result[i] += count
-        }
-        if (command == ']') kRight++
-        if (command == '[') {
-            kLeft++
-            if (result[i] != 0) {
-                var kRight1 = 0
-                var kLeft1 = 1
-                for (j in u + 1 until commands.length) {
-                    sender += commands[j]
-                    if (commands[j] == ']') {
-                        kRight1++
-                        if (kLeft1 == kRight1) break
-                    }
-                    if (commands[j] == '[') kLeft1++
-                }
-                if (sender.first() != ']') {
-                    if (computeDeviceCellsHelper(
-                            result,
-                            sender.joinToString(separator = ""),
-                            limiter,
-                            cells,
-                            i
-                        ) == null
-                    ) throw e2
-                    else
-                        result =
-                            computeDeviceCellsHelper(
-                                result,
-                                sender.joinToString(separator = ""),
-                                limiter,
-                                cells,
-                                i
-                            )!!.toMutableList()
-                }
-                i = result.last()
-                result.remove(i)
-            }
-        }
-        limiter -= 1
-        if (i < 0 || i > cells) throw e2
-        if (limiter <= 0) break
-    }
-    return result
+    TODO()
 }
