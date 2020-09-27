@@ -407,8 +407,8 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                 a.remove(a.last())
             }
         }
-    } catch (e: IllegalArgumentException) {
-        throw e
+    } catch (e: NoSuchElementException) {
+        throw IllegalArgumentException()
     }
     if (a.isNotEmpty()) throw IllegalArgumentException()
 
