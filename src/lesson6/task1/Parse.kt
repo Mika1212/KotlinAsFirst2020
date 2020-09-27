@@ -429,11 +429,11 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                 j = k
                 bracketOpen = false
             }
+            lim -= 1
         }
         if (commands[k] == ']' && !bracketOpen && mapOfBrackets[k] == j) bracketOpen = true
         if (commands[k] == ']' && list[cursor] != 0) k = mapOfBrackets[k]!!
         k += 1
-        lim -= 1
     }
     return list
 }
