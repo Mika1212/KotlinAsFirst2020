@@ -164,7 +164,7 @@ fun dateDigitToStr(digital: String): String {
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
 fun flattenPhoneNumber(phone: String): String {
-if (!phone.contains(Regex("""[ \-()0-9+]"""))) return ""
+    if (!phone.contains(Regex("""[ \-()0-9+]"""))) return ""
     if ("(" in phone && ")" !in phone || ")" in phone && "(" !in phone) return ""
     if (!phone.matches(Regex("""\+?\s*\d*\s*(\(?[ \-0-9+]+\)?)?\s*[ \-0-9+]*"""))) return ""
     return Regex("""[ \-()]""").split(phone).joinToString(separator = "")
@@ -389,5 +389,47 @@ fun fromRoman(roman: String): Int {
  */
 
 fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    TODO()
+    if (commands.split(Regex("""[ \[\]+\-<>]""")).joinToString(separator = "") != "") throw IllegalArgumentException()
+    var cursor = cells / 2
+    val list = mutableListOf<Int>()
+
+    for (i in 0 until cells)
+        list.add(0)
+
+    val a = mutableListOf<Int>()
+    val mapOfBrackets = mutableMapOf<Int, Int>()
+
+    try {
+        for (i in commands.indices) {
+            if (commands[i] == '[') a.add(i)
+            if (commands[i] == ']') {
+                mapOfBrackets.put(i, a.last())
+                a.remove(a.last())
+            }
+        }
+    } catch (e: IllegalArgumentException) {
+        throw e
+    }
+    if (a.isNotEmpty()) throw IllegalArgumentException()
+
+    var lim = limit
+    var k = 0
+    var bracketOpen = true
+
+    while (lim > 0) {
+        if (cursor > cells) throw IllegalStateException()
+        if (k > commands.length - 1) break
+        if (bracketOpen) {
+            if (commands[k] == '-') list[cursor] -= 1
+            if (commands[k] == '+') list[cursor] += 1
+            if (commands[k] == '<') cursor -= 1
+            if (commands[k] == '>') cursor += 1
+        }
+        if (commands[k] == ']' && !bracketOpen) bracketOpen = true
+        if (commands[k] == '[' && list[cursor] == 0) bracketOpen = false
+        if (commands[k] == ']' && list[cursor] != 0) k = mapOfBrackets[k]!!
+        k += 1
+        lim -= 1
+    }
+    return list
 }
