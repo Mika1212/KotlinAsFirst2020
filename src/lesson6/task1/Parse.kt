@@ -415,6 +415,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var lim = limit
     var k = 0
     var bracketOpen = true
+    var j =0
 
     while (lim > 0) {
         if (cursor > cells - 1 || cursor < 0) throw IllegalStateException()
@@ -424,9 +425,12 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             if (commands[k] == '+') list[cursor] += 1
             if (commands[k] == '<') cursor -= 1
             if (commands[k] == '>') cursor += 1
+            if (commands[k] == '[' && list[cursor] == 0) {
+                j = k
+                bracketOpen = false
+            }
         }
-        if (commands[k] == ']' && !bracketOpen) bracketOpen = true
-        if (commands[k] == '[' && list[cursor] == 0) bracketOpen = false
+        if (commands[k] == ']' && !bracketOpen && mapOfBrackets[k] == j) bracketOpen = true
         if (commands[k] == ']' && list[cursor] != 0) k = mapOfBrackets[k]!!
         k += 1
         lim -= 1
