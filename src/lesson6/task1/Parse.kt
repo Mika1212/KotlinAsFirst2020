@@ -417,7 +417,7 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var bracketOpen = true
 
     while (lim > 0) {
-        if (cursor > cells) throw IllegalStateException()
+        if (cursor > cells || cursor < 0) throw IllegalStateException()
         if (k > commands.length - 1) break
         if (bracketOpen) {
             if (commands[k] == '-') list[cursor] -= 1
