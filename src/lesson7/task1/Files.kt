@@ -2,7 +2,11 @@
 
 package lesson7.task1
 
+import lesson3.task1.digitNumber
+import java.io.BufferedWriter
 import java.io.File
+import java.lang.Math.pow
+import kotlin.math.pow
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -205,7 +209,24 @@ fun top20Words(inputName: String): Map<String, Int> = TODO()
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        val check = line[0].toLowerCase() != line[0]
+        for ((i, letter) in line.withIndex()) {
+            var forWrite = "$letter"
+            when {
+                dictionary.containsKey(letter.toLowerCase()) -> forWrite = dictionary[letter.toLowerCase()]!!
+                dictionary.containsKey(letter.toUpperCase()) -> forWrite = dictionary[letter.toUpperCase()]!!
+            }
+            if (i == 0 && check) {
+                writer.write(forWrite[0].toUpperCase().toString())
+                for (j in 1 until forWrite.length) writer.write(forWrite[j].toLowerCase().toString())
+            } else
+                writer.write(forWrite.toLowerCase())
+        }
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**
@@ -282,7 +303,71 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var emptyLine = 0
+    var iNumber = 0
+    var bNumber = 0
+    var sNumber = 0
+    writer.write("<html>\n" + "<body>\n" + "<p>\n")
+    for (line1 in File(inputName).readLines()) {
+        if (line1.isEmpty() && emptyLine % 2 == 0) {
+            writer.write("</p>")
+            emptyLine++
+            writer.newLine()
+        }
+        if (line1.isEmpty() && emptyLine % 2 == 1) {
+            writer.write("<p>")
+            emptyLine++
+            writer.newLine()
+        }
+        val line = ";$line1"
+        loop@ for ((i, letter) in line.withIndex()) {
+            when {
+                letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 0 -> {
+                    writer.write("<i>")
+                    iNumber++
+                }
+                letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 1 -> {
+                    writer.write("</i>")
+                    iNumber++
+                }
+                letter == '*' && line[i + 1] == '*' && line[i - 1] != '*' && line[i + 2] != '*' && bNumber % 2 == 0 -> {
+                    writer.write("<b>")
+                    bNumber++
+                }
+                letter == '*' && line[i + 1] == '*' && line[i - 1] != '*' && line[i + 2] != '*' && bNumber % 2 == 1 -> {
+                    writer.write("</b>")
+                    bNumber++
+                }
+                letter == '*' && line[i + 1] == '*' && line[i + 2] == '*' && line[i - 1] != '*' && bNumber % 2 == 0 && iNumber % 2 == 0 -> {
+                    writer.write("<b><i>")
+                    bNumber++
+                    iNumber++
+                }
+                letter == '*' && line[i + 1] == '*' && line[i + 2] == '*' && line[i - 1] != '*' && bNumber % 2 == 1 && iNumber % 2 == 1 -> {
+                    writer.write("</b></i>")
+                    bNumber++
+                    iNumber++
+                }
+                letter == '~' && line[i + 1] == '~' && line[i - 1] != '~' && sNumber % 2 == 0 -> {
+                    writer.write("<s>")
+                    sNumber++
+                }
+                letter == '~' && line[i + 1] == '~' && line[i - 1] != '~' && sNumber % 2 == 1 -> {
+                    writer.write("</s>")
+                    sNumber++
+                }
+                letter == '*' && line[i - 1] == '*' -> continue@loop
+                letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
+                letter == '~' && line[i - 1] == '~' -> continue@loop
+                letter == ';' -> continue@loop
+                else -> writer.write(letter.toString())
+            }
+        }
+        if (line.isNotEmpty()) writer.newLine()
+    }
+    writer.write("</p>\n" + "</body>\n" + "</html>\n")
+    writer.close()
 }
 
 /**
@@ -382,6 +467,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+
 fun markdownToHtmlLists(inputName: String, outputName: String) {
     TODO()
 }
@@ -424,9 +510,8 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+   TODO()
 }
-
 
 /**
  * Сложная (25 баллов)
@@ -448,7 +533,39 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
-fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
+fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String){
     TODO()
 }
 
+/*{
+    val writer = File(outputName).bufferedWriter()
+    var lhv1 = lhv
+    var counter=0
+    writer.write(" $lhv | $rhv\n")
+    while (lhv1>rhv) {
+        var a =0
+        var k =0
+        val k2 = digitNumber(lhv1)
+        counter++
+        for (i in k2-1..1) {
+            k++
+            a = lhv1/ 10.0.pow(i.toDouble()).toInt()
+            if (a>=rhv) {
+                writer.write("-$a")
+                a=i
+                break
+            }
+        }
+
+        if (counter==1) {
+            val b = lhv / rhv
+            for (i in 1..k2-a+1) writer.write(" ")
+            writer.write(b.toString())
+        }
+        writer.newLine()
+        for (i in 1..k) writer.write("-")
+        lhv1=0
+    }
+    writer.close()
+}
+*/

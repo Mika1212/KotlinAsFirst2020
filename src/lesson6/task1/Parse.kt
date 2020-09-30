@@ -392,13 +392,10 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     if (commands.split(Regex("""[ \[\]+\-<>]""")).joinToString(separator = "") != "") throw IllegalArgumentException()
     var cursor = cells / 2
     val list = mutableListOf<Int>()
-
     for (i in 0 until cells)
         list.add(0)
-
     val a = mutableListOf<Int>()
     val mapOfBrackets = mutableMapOf<Int, Int>()
-
     try {
         for (i in commands.indices) {
             if (commands[i] == '[') a.add(i)
@@ -411,12 +408,10 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
         throw IllegalArgumentException()
     }
     if (a.isNotEmpty()) throw IllegalArgumentException()
-
     var lim = limit
     var k = 0
     var bracketOpen = true
-    var j =0
-
+    var j = 0
     while (lim > 0) {
         if (cursor > cells - 1 || cursor < 0) throw IllegalStateException()
         if (k > commands.length - 1) break
@@ -431,7 +426,6 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
             }
             lim -= 1
         }
-
         if (commands[k] == ']' && !bracketOpen && mapOfBrackets[k] == j) bracketOpen = true
         if (commands[k] == ']' && list[cursor] != 0) k = mapOfBrackets[k]!!
         k += 1
