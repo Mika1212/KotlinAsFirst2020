@@ -222,7 +222,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                 writer.write(forWrite[0].toUpperCase().toString())
                 for (j in 1 until forWrite.length) writer.write(forWrite[j].toLowerCase().toString())
             } else
-                writer.write(forWrite.toLowerCase())
+                writer.write(forWrite)
         }
         writer.newLine()
     }
