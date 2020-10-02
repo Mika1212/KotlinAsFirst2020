@@ -208,29 +208,9 @@ fun top20Words(inputName: String): Map<String, Int> = TODO()
  *
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
+
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    for (line in File(inputName).readLines()) {
-        val check = line[0].toLowerCase() != line[0]
-        for ((i, letter) in line.withIndex()) {
-            var forWrite = "$letter"
-            if (dictionary.isEmpty())
-                writer.write(forWrite)
-            else {
-                when {
-                    dictionary.containsKey(letter.toLowerCase()) -> forWrite = dictionary[letter.toLowerCase()]!!
-                    dictionary.containsKey(letter.toUpperCase()) -> forWrite = dictionary[letter.toUpperCase()]!!
-                }
-                if (i == 0 && check) {
-                    writer.write(forWrite[0].toUpperCase().toString())
-                    for (j in 1 until forWrite.length) writer.write(forWrite[j].toLowerCase().toString())
-                } else
-                    writer.write(forWrite.toLowerCase())
-            }
-        }
-        writer.newLine()
-    }
-    writer.close()
+    TODO()
 }
 
 /**
@@ -306,6 +286,7 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     var emptyLine = 0
@@ -343,13 +324,15 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     writer.write("</b>")
                     bNumber++
                 }
-                letter == '*' && line[i + 1] == '*' && line[i + 2] == '*' && line[i - 1] != '*' && bNumber % 2 == 0 && iNumber % 2 == 0 -> {
-                    writer.write("<b><i>")
-                    bNumber++
-                    iNumber++
-                }
-                letter == '*' && line[i + 1] == '*' && line[i + 2] == '*' && line[i - 1] != '*' && bNumber % 2 == 1 && iNumber % 2 == 1 -> {
-                    writer.write("</b></i>")
+                letter == '*' && line[i + 1] == '*' && line[i + 2] == '*' && line[i - 1] != '*' -> {
+                    if (bNumber % 2 == 0 && iNumber % 2 == 0)
+                        writer.write("<b><i>")
+                    if (bNumber % 2 == 1 && iNumber % 2 == 1)
+                        writer.write("</b></i>")
+                    if (bNumber % 2 == 1 && iNumber % 2 == 0)
+                        writer.write("</b><i>")
+                    if (bNumber % 2 == 0 && iNumber % 2 == 1)
+                        writer.write("<b></i>")
                     bNumber++
                     iNumber++
                 }
