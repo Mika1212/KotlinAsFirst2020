@@ -92,14 +92,12 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-    val result = mutableMapOf<Int, List<String>>()
+    val result = mutableMapOf<Int, MutableList<String>>()
     for ((key, value) in grades) {
         if (value in result) {
-            val helper = result[value]!!.toMutableList()
-            helper.add(key)
-            result[value] = helper
+            result[value]!!.add(key)
         } else
-            result[value] = listOf(key)
+            result[value] = mutableListOf(key)
     }
     return result
 }
@@ -197,12 +195,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
         } else
             result1[name] = Pair(price, 1)
     }
-    val result = mutableMapOf<String, Double>()
-    for ((name, number) in result1) {
-        val (helperPrice, helperInt) = number
-        result[name] = helperPrice / helperInt
-    }
-    return result
+    return result1.mapValues { it.value.first/it.value.second  }
 }
 
 /**
@@ -246,12 +239,11 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *   canBuildFrom(listOf('a', 'b', 'o'), "baobab") -> true
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
-    val a = chars.joinToString(separator = ", ").toLowerCase().toSet()
+    val a = chars.joinToString(separator = "").toLowerCase().toSet()
     val b = word.toLowerCase().toSet()
     if (a.union(b) == a)
         return true
-    println(a)//Подскажите, пожалуйста, откуда в этом множестве появляются 2 запятые вместо какого-то члена?
-    return false                                                 //Воде бы итак написаны все члены множества
+    return false
 }
 
 /**
@@ -267,16 +259,13 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
-    val result1 = mutableMapOf<String, Int>()
-    for (name in list) {
-        if (name in result1)
-            result1[name] = result1[name]!! + 1
-        else result1[name] = 1
-    }
     val result = mutableMapOf<String, Int>()
-    for ((name, count) in result1)
-        if (count > 1) result[name] = count
-    return result
+    for (name in list) {
+        if (name in result)
+            result[name] = result[name]!! + 1
+        else result[name] = 1
+    }
+    return result.filterValues { it > 1 }
 }
 
 /**
@@ -293,7 +282,6 @@ fun hasAnagrams(words: List<String>): Boolean {
     if (words.isNotEmpty()) {
         for (name in words)
             list.add(name.toSet())
-
         for (name in list) {
             val list1 = list.toMutableList()
             list1.remove(name)

@@ -202,16 +202,18 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
+
 fun factorize(n: Int): List<Int> {
     var number = n
     val list = mutableListOf<Int>()
+    var i = 1
     while (number > 1) {
-        for (i in 2..n)
-            while (number % i == 0) {
-                list.add(i)
-                number /= i
-                if (number == 1) break
-            }
+        i++
+        while (number % i == 0) {
+            list.add(i)
+            number /= i
+            if (number == 1) break
+        }
     }
     return list
 }
@@ -243,26 +245,6 @@ fun convert(n: Int, base: Int): List<Int> {
     if (list.isEmpty()) list.add(0)
     return list.reversed()
 }
-
-/* Подскажите, пожалуйста, почему эта программа выполнялась неправильно?
-Я попытался перевернуть список, но не вышло.
-{
-    val list = mutableListOf<Int>()
-    var digit = 0
-    var number = n
-    while (number > 0) {
-        digit = number % base
-        list.add(digit)
-        number /= base
-    }
-    val list1 = mutableListOf<Int>()
-    if (list.isNotEmpty())
-        for (i in 0 until list.size) {
-            list1.add(list[list.size - i-1])
-        }
-    return list1
-}
- */
 
 /**
  * Сложная
