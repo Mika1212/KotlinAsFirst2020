@@ -208,7 +208,7 @@ Basic, Ruby, Swift.
     fun transliterate() {
         transliterate(
             "input/trans_in1.txt",
-            mapOf(),
+            mapOf('з' to "zz", 'р' to "r", 'д' to "d", 'й' to "y", 'М' to "m", 'и' to "yy", '!' to "!!!"),
             "temp.txt"
         )
         assertFileContent("temp.txt", "Zzdrавствуy,\nmyyr!!!")
