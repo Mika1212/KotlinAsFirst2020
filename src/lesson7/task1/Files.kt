@@ -214,15 +214,19 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
         val check = line[0].toLowerCase() != line[0]
         for ((i, letter) in line.withIndex()) {
             var forWrite = "$letter"
-            when {
-                dictionary.containsKey(letter.toLowerCase()) -> forWrite = dictionary[letter.toLowerCase()]!!
-                dictionary.containsKey(letter.toUpperCase()) -> forWrite = dictionary[letter.toUpperCase()]!!
-            }
-            if (i == 0 && check) {
-                writer.write(forWrite[0].toUpperCase().toString())
-                for (j in 1 until forWrite.length) writer.write(forWrite[j].toLowerCase().toString())
-            } else
+            if (dictionary.isEmpty())
                 writer.write(forWrite)
+            else {
+                when {
+                    dictionary.containsKey(letter.toLowerCase()) -> forWrite = dictionary[letter.toLowerCase()]!!
+                    dictionary.containsKey(letter.toUpperCase()) -> forWrite = dictionary[letter.toUpperCase()]!!
+                }
+                if (i == 0 && check) {
+                    writer.write(forWrite[0].toUpperCase().toString())
+                    for (j in 1 until forWrite.length) writer.write(forWrite[j].toLowerCase().toString())
+                } else
+                    writer.write(forWrite.toLowerCase())
+            }
         }
         writer.newLine()
     }
