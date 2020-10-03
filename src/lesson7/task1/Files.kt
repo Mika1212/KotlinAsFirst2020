@@ -305,7 +305,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             emptyLine++
             writer.newLine()
         }
-        val line = ";$line1"
+        val line = ";$line1;"
         loop@ for ((i, letter) in line.withIndex()) {
             when {
                 letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 0 -> {
@@ -337,7 +337,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     iNumber++
                 }
                 letter == '\\' && line[i + 1] == 'n' -> writer.newLine()
-                letter == '\\' && line[i+1] == 't' -> writer.write("   ")
+                letter == '\\' && line[i + 1] == 't' -> writer.write("   ")
                 letter == '~' && line[i + 1] == '~' && line[i - 1] != '~' && sNumber % 2 == 0 -> {
                     writer.write("<s>")
                     sNumber++
@@ -351,7 +351,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 letter == '*' && line[i - 1] == '*' -> continue@loop
                 letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
                 letter == '~' && line[i - 1] == '~' -> continue@loop
-                letter == ';' -> continue@loop
+                letter == ';' && (i == 0 || i == line1.length+1) -> continue@loop
                 else -> writer.write(letter.toString())
             }
         }
