@@ -237,6 +237,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
  *
  * Обратите внимание: данная функция не имеет возвращаемого значения
  */
+
 fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     TODO()
 }
@@ -336,8 +337,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     bNumber++
                     iNumber++
                 }
-                letter == '\\' && line[i + 1] == 'n' -> writer.newLine()
-                letter == '\\' && line[i + 1] == 't' -> writer.write("   ")
+                letter == '\\' && line[i + 1] == 'n' -> continue@loop
+                letter == '\\' && line[i + 1] == 't' -> continue@loop
                 letter == '~' && line[i + 1] == '~' && line[i - 1] != '~' && sNumber % 2 == 0 -> {
                     writer.write("<s>")
                     sNumber++
@@ -351,7 +352,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 letter == '*' && line[i - 1] == '*' -> continue@loop
                 letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
                 letter == '~' && line[i - 1] == '~' -> continue@loop
-                letter == ';' && (i == 0 || i == line1.length+1) -> continue@loop
+                letter == ';' && (i == 0 || i == line1.length + 1) -> continue@loop
                 else -> writer.write(letter.toString())
             }
         }
@@ -525,39 +526,81 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
+
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
-
 /*{
     val writer = File(outputName).bufferedWriter()
     var lhv1 = lhv
-    var counter=0
+    var counter = 0
+    var tab = 0
     writer.write(" $lhv | $rhv\n")
-    while (lhv1>rhv) {
-        var a =0
-        var k =0
+    if (lhv < rhv) {
+        writer.write("-0")
+        for (i in 1..digitNumber(lhv) + digitNumber(rhv)) writer.write(" ")
+        writer.write("0\n")
+        writer.write("--\n ")
+    }
+
+    while (lhv1 > rhv) {
+
+        var a = 0
+        var k = 0
         val k2 = digitNumber(lhv1)
         counter++
-        for (i in k2-1..1) {
+        for (i in 1..tab) writer.write(" ")
+
+        for (i in k2 - 1 downTo 0) {
             k++
-            a = lhv1/ 10.0.pow(i.toDouble()).toInt()
-            if (a>=rhv) {
+            val helper = lhv1 / 10.0.pow(i.toDouble()).toInt()
+
+            if (helper >= rhv) {
+
+                if (counter != 1) {
+                    for (j in 0..tab - 1) writer.write(" ")
+                    writer.write("$helper\n")
+                    for (j in 0..tab - 2) writer.write(" ")
+                }
+
+                a = helper / rhv * rhv
+                lhv1 = if (digitNumber(lhv1 - a) > 1)
+                    ((helper - a) * 10.0.pow(digitNumber(lhv1) - i - 1) +
+                            (lhv1 % 10.0.pow(i.toDouble()).toInt())).toInt()
+                else
+                    (helper - a)
                 writer.write("-$a")
-                a=i
+                a = i
                 break
-            }
+
+            } else
+                if (counter != 1 && k > 1) {
+                    writer.write("$helper")
+                    writer.newLine()
+                    for (j in 1..tab) writer.write(" ")
+                    writer.write("-0")
+                    writer.newLine()
+                    for (j in 1..tab) writer.write(" ")
+                    for (j in 1..k) writer.write("-")
+                    writer.newLine()
+                }
         }
 
-        if (counter==1) {
+        if (counter == 1) {
             val b = lhv / rhv
-            for (i in 1..k2-a+1) writer.write(" ")
+            for (i in 0..k2 - a + 1) writer.write(" ")
             writer.write(b.toString())
         }
+
         writer.newLine()
-        for (i in 1..k) writer.write("-")
-        lhv1=0
+        for (i in 1..tab - 1) writer.write(" ")
+        for (i in 0..k) writer.write("-")
+        tab += k
+        writer.newLine()
+
     }
+    for (i in 1..tab - 1) writer.write(" ")
+    writer.write("$lhv1")
     writer.close()
 }
 */
