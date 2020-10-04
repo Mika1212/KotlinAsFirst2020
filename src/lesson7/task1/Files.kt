@@ -295,10 +295,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var sNumber = 0
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
     for (line1 in File(inputName).readLines()) {
-        if (line1.isEmpty()) {
-            writer.write("</p>\n<p>")
-            writer.newLine()
-        }
+        if (line1.isEmpty()) writer.write("</p>\n<p>")
         val line = ";$line1;"
         loop@ for ((i, letter) in line.withIndex()) {
             when {
