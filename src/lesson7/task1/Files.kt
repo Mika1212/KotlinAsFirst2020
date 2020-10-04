@@ -290,7 +290,6 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
-    var emptyLine = 0
     var iNumber = 0
     var bNumber = 0
     var sNumber = 0
@@ -341,8 +340,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     writer.write("</s>")
                     sNumber++
                 }
-                letter == 'n' && line[i - 1] == '\\' -> continue@loop
-                letter == 't' && line[i - 1] == '\\' -> continue@loop
+                letter == 'n' && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
+                letter == 't' && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
                 letter == '*' && line[i - 1] == '*' -> continue@loop
                 letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
                 letter == '~' && line[i - 1] == '~' -> continue@loop
