@@ -163,12 +163,7 @@ fun dateDigitToStr(digital: String): String {
  *
  * PS: Дополнительные примеры работы функции можно посмотреть в соответствующих тестах.
  */
-fun flattenPhoneNumber(phone: String): String {
-    if (!phone.contains(Regex("""[ \-()0-9+]"""))) return ""
-    if ("(" in phone && ")" !in phone || ")" in phone && "(" !in phone) return ""
-    if (!phone.matches(Regex("""\+?\s*\d*\s*(\(?[ \-0-9+]+\)?)?\s*[ \-0-9+]*"""))) return ""
-    return Regex("""[ \-()]""").split(phone).joinToString(separator = "")
-}
+fun flattenPhoneNumber(phone: String): String = TODO()
 
 /**
  * Средняя
