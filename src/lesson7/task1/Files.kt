@@ -305,11 +305,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
         val line = ";$line1;"
         loop@ for ((i, letter) in line.withIndex()) {
-            if (str.isNotEmpty() && str.last() == ";;;;;" && str[str.size - 2] == ";;;;;") {
-                str.removeLast()
-                str.removeLast()
-                str.add("</p>\n<p>")
-            }
+            if (str.isNotEmpty() && str.last() == ";;;;;" && str[str.size - 2] == ";;;;;") str.add("</p>\n<p>")
             when {
                 letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 0 -> {
                     str.add("<i>")
