@@ -342,9 +342,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 letter == '\\' && line[i - 1] == '\\' -> writer.write("\\")
                 letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' -> writer.write("n")
                 letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' -> writer.write("t")
-                letter == 'n' && line[i - 1] == '\\' && line[i - 2] != '\\'
-                -> continue@loop
-                letter == 't' && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
                 letter == '*' && line[i - 1] == '*' -> continue@loop
                 letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
                 letter == '~' && line[i - 1] == '~' -> continue@loop
@@ -357,7 +354,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     writer.write("</p>\n" + "</body>\n" + "</html>\n")
     writer.close()
 }
-
+/*
+letter == 'n' && line[i - 1] == '\\' && line[i - 2] != '\\'
+-> continue@loop
+letter == 't' && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
+*/
 /**
  * Сложная (23 балла)
  *
