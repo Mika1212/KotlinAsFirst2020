@@ -2,7 +2,9 @@
 
 package lesson7.task1
 
+import lesson3.task1.digitNumber
 import java.io.File
+import kotlin.math.pow
 
 
 // Урок 7: работа с файлами
@@ -287,79 +289,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  */
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    val str = mutableListOf<String>()
-    var iNumber = 0
-    var bNumber = 0
-    var sNumber = 0
-    val result = mutableListOf<String>()
-    var emptyLine = false
-    writer.write("<html>\n" + "<body>\n" + "<p>\n")
-    loop1@ for (line1 in File(inputName).readLines()) {
-        if (line1.isNotEmpty()) emptyLine = true
-        if (line1.isEmpty() && emptyLine) {
-            emptyLine = false
-            result.add("</p>\n<p>")
-        }
-        val line = ";$line1;"
-        loop@ for ((i, letter) in line.withIndex()) {
-            if (i > 3 && str.last() == "\n" && str[str.size - 2] == "\n") str.add("</p>\n<p>")
-            when {
-                letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 0 -> {
-                    str.add("<i>")
-                    iNumber++
-                }
-                letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 1 -> {
-                    str.add("</i>")
-                    iNumber++
-                }
-                letter == '*' && line[i + 1] == '*' && line[i - 1] != '*' && line[i + 2] != '*' && bNumber % 2 == 0 -> {
-                    str.add("<b>")
-                    bNumber++
-                }
-                letter == '*' && line[i + 1] == '*' && line[i - 1] != '*' && line[i + 2] != '*' && bNumber % 2 == 1 -> {
-                    str.add("</b>")
-                    bNumber++
-                }
-                letter == '*' && line[i + 1] == '*' && line[i + 2] == '*' && line[i - 1] != '*' -> {
-                    if (bNumber % 2 == 0 && iNumber % 2 == 0)
-                        str.add("<b><i>")
-                    if (bNumber % 2 == 1 && iNumber % 2 == 1)
-                        str.add("</b></i>")
-                    bNumber++
-                    iNumber++
-                }
-                letter == '~' && line[i + 1] == '~' && line[i - 1] != '~' && sNumber % 2 == 0 -> {
-                    str.add("<s>")
-                    sNumber++
-                }
-                letter == '~' && line[i + 1] == '~' && line[i - 1] != '~' && sNumber % 2 == 1 -> {
-                    str.add("</s>")
-                    sNumber++
-                }
-                letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' && line[i - 3] != '\\' -> str.add("n")
-                letter == 't' && line[i - 1] == '\\' && line[i - 2] == '\\' && line[i - 3] != '\\' -> str.add("t")
-                letter == '\\' && line[i + 1] == 'n' &&
-                        (line[i - 1] != '\\' || line[i - 1] == '\\' && line[i - 2] == '\\') -> str.add("\n")
-                (letter == 'n' || letter == 't') && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
-                letter == '\\' && (line[i + 1] == 'n' || line[i + 1] == 't') && line[i - 1] != '\\' -> continue@loop
-                letter == '*' && line[i - 1] == '*' -> continue@loop
-                letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
-                letter == '~' && line[i - 1] == '~' -> continue@loop
-                letter == ';' && (i == 0 || i == line1.length + 1) -> continue@loop
-                else -> str.add(letter.toString())
-            }
-        }
-        for (l in str)
-            result.add(l)
-        str.clear()
-        if (line1.isNotEmpty()) writer.newLine()
-    }
-    if (result.last() == "</p>\n<p>") result.removeLast()
-    for (line in result)
-        writer.write(line)
-    writer.write("</p>\n" + "</body>\n" + "</html>\n")
-    writer.close()
+    TODO()
 }
 
 /**
@@ -528,13 +458,13 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  */
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
-}
-/*{
     val writer = File(outputName).bufferedWriter()
     var lhv1 = lhv
     var counter = 0
     var tab = 0
+    var helperName = 0
+    var mark = false
+    var markChange =0
     writer.write(" $lhv | $rhv\n")
     if (lhv < rhv) {
         writer.write("-0")
@@ -548,19 +478,23 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var a = 0
         var k = 0
         val k2 = digitNumber(lhv1)
+        var helper = 0
         counter++
-        for (i in 1..tab) writer.write(" ")
+        if (mark && markChange==0) {
+            tab++
+            markChange++
+        }
 
         for (i in k2 - 1 downTo 0) {
             k++
-            val helper = lhv1 / 10.0.pow(i.toDouble()).toInt()
+            helper = lhv1 / 10.0.pow(i.toDouble()).toInt()
 
             if (helper >= rhv) {
-
+                for (i in 1..tab) writer.write(" ")
                 if (counter != 1) {
-                    for (j in 0..tab - 1) writer.write(" ")
+                    if (mark) writer.write("0")
                     writer.write("$helper\n")
-                    for (j in 0..tab - 2) writer.write(" ")
+                    for (j in 1..tab - 1) writer.write(" ")
                 }
 
                 a = helper / rhv * rhv
@@ -570,11 +504,12 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 else
                     (helper - a)
                 writer.write("-$a")
-                a = i
+                helperName = digitNumber(a)
                 break
 
             } else
                 if (counter != 1 && k > 1) {
+                    for (i in 1..tab) writer.write(" ")
                     writer.write("$helper")
                     writer.newLine()
                     for (j in 1..tab) writer.write(" ")
@@ -586,9 +521,10 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                 }
         }
 
+
         if (counter == 1) {
             val b = lhv / rhv
-            for (i in 0..k2 - a + 1) writer.write(" ")
+            for (i in 0..k2 - helperName + 2) writer.write(" ")
             writer.write(b.toString())
         }
 
@@ -597,10 +533,9 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         for (i in 0..k) writer.write("-")
         tab += k
         writer.newLine()
-
+        mark = helper == a
     }
     for (i in 1..tab - 1) writer.write(" ")
     writer.write("$lhv1")
     writer.close()
 }
-*/
