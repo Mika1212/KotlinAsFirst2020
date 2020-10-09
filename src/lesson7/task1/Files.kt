@@ -305,7 +305,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
         val line = ";$line1;"
         loop@ for ((i, letter) in line.withIndex()) {
-            if (str.isNotEmpty() && str.last() == ";;;;;" && str[str.size - 1] == ";;;;;") {
+            if (str.isNotEmpty() && str.last() == ";;;;;" && str[str.size - 2] == ";;;;;") {
                 str.removeLast()
                 str.removeLast()
                 str.add("</p>\n<p>")
@@ -357,8 +357,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         }
         writer.write(str.filter { it != ";;;;;" }.joinToString(separator = ""))
+        if (str.isNotEmpty()) writer.newLine()
         str.clear()
-        if (line1.isNotEmpty()) writer.newLine()
     }
     writer.write("</p>\n" + "</body>\n" + "</html>\n")
     writer.close()
