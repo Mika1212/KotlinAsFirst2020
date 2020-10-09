@@ -296,7 +296,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var iNumber = 0
     var bNumber = 0
     var sNumber = 0
-    var newLine = 0
+    val result = mutableListOf<String>()
     var emptyLine = false
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
     loop1@ for (line1 in File(inputName).readLines()) {
@@ -341,12 +341,12 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     str.add("</s>")
                     sNumber++
                 }
-                letter == '\\' && line[i + 1] == 'n' && line[i - 1] != '\\' -> str.add("\n")
-                letter == 'n' && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
                 letter == '\\' && line[i + 1] == '\\' -> str.add('\\'.toString())
                 letter == '\\' && line[i - 1] == '\\' -> str.add('\\'.toString())
                 letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' -> str.add("n")
                 letter == 't' && line[i - 1] == '\\' && line[i - 2] == '\\' -> str.add("t")
+                letter == '\\' && line[i + 1] == 'n' && line[i - 1] != '\\' -> str.add("\n")
+                letter == 'n' && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
                 letter == '*' && line[i - 1] == '*' -> continue@loop
                 letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
                 letter == '~' && line[i - 1] == '~' -> continue@loop
@@ -354,10 +354,14 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 else -> str.add(letter.toString())
             }
         }
-        writer.write(str.joinToString(separator = ""))
+        for (l in str)
+        result.add(l)
         str.clear()
         if (line1.isNotEmpty()) writer.newLine()
     }
+    if (result.last() == "</p>\n<p>") result.removeLast()
+    for (line in result)
+        writer.write(line)
     writer.write("</p>\n" + "</body>\n" + "</html>\n")
     writer.close()
 }
