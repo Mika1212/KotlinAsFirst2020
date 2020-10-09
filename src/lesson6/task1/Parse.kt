@@ -319,7 +319,6 @@ fun fromRoman(roman: String): Int {
     val romanMod = listOf(" ", roman, " ").joinToString(separator = "")
     val set = setOf('I', 'V', 'X', 'C', 'D', 'M', 'L', ' ')
     for (i in romanMod) if (i !in set) return -1
-    if (roman.isEmpty()) return -1
     try {
         for (i in 1 until romanMod.length - 1) {
             when {
@@ -338,7 +337,7 @@ fun fromRoman(roman: String): Int {
                 romanMod[i] == 'I' && romanMod[i + 1] != 'X' && romanMod[i + 1] != 'V' -> result += 1
             }
         }
-        return result
+        return if (result == 0) -1 else result
     } catch (e: IndexOutOfBoundsException) {
         return -1
     } catch (e: NumberFormatException) {

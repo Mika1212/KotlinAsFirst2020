@@ -293,7 +293,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var iNumber = 0
     var bNumber = 0
     var sNumber = 0
-    var emptyLine = true
+    var emptyLine = false
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
     for (line1 in File(inputName).readLines()) {
         if (line1.isEmpty() && emptyLine) {
@@ -325,10 +325,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         writer.write("<b><i>")
                     if (bNumber % 2 == 1 && iNumber % 2 == 1)
                         writer.write("</b></i>")
-                    if (bNumber % 2 == 1 && iNumber % 2 == 0)
-                        writer.write("</b><i>")
-                    if (bNumber % 2 == 0 && iNumber % 2 == 1)
-                        writer.write("<b></i>")
                     bNumber++
                     iNumber++
                 }
