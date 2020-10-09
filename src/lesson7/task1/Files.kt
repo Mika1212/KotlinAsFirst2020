@@ -341,7 +341,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 letter == '\\' && line[i + 1] == '\\' -> writer.write("\\")
                 letter == '\\' && line[i - 1] == '\\' -> writer.write("\\")
                 letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' -> writer.write("n")
-                letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' -> writer.write("t")
+                letter == 't' && line[i - 1] == '\\' && line[i - 2] == '\\' -> writer.write("t")
                 letter == '*' && line[i - 1] == '*' -> continue@loop
                 letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
                 letter == '~' && line[i - 1] == '~' -> continue@loop
