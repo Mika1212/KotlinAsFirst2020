@@ -299,11 +299,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (line1.isNotEmpty()) emptyLine = true
         if (line1.isEmpty() && emptyLine) {
             emptyLine = false
-            str.add("</p>\n<p>")
+            result.add("</p>\n<p>")
         }
         val line = ";$line1;"
         loop@ for ((i, letter) in line.withIndex()) {
-            if (str.isNotEmpty() && str.last() == "\n" && str[str.size - 2] == "\n") str.add("</p>\n<p>")
+            if (i > 3 && str.last() == "\n" && str[str.size - 2] == "\n") str.add("</p>\n<p>")
             when {
                 letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 0 -> {
                     str.add("<i>")
@@ -337,11 +337,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     str.add("</s>")
                     sNumber++
                 }
-                letter == '\\' && line[i + 1] == '\\' -> str.add('\\'.toString())
-                letter == '\\' && line[i - 1] == '\\' -> str.add('\\'.toString())
-                letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' -> str.add("n")
-                letter == 't' && line[i - 1] == '\\' && line[i - 2] == '\\' -> str.add("t")
-                letter == '\\' && line[i + 1] == 'n' && line[i - 1] != '\\' -> str.add("\n")
+                letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' && line[i - 3] != '\\' -> str.add("n")
+                letter == 't' && line[i - 1] == '\\' && line[i - 2] == '\\' && line[i - 3] != '\\' -> str.add("t")
+                letter == '\\' && line[i + 1] == 'n' &&
+                        (line[i - 1] != '\\' || line[i - 1] == '\\' && line[i - 2] == '\\') -> str.add("\n")
                 (letter == 'n' || letter == 't') && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
                 letter == '\\' && (line[i + 1] == 'n' || line[i + 1] == 't') && line[i - 1] != '\\' -> continue@loop
                 letter == '*' && line[i - 1] == '*' -> continue@loop
