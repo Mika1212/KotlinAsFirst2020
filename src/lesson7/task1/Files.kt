@@ -308,8 +308,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             if (str.isNotEmpty() && str.last() == ";;;;;;" && str[str.size - 2] == ";;;;;") {
                 str.removeLast()
                 str.removeLast()
-                str.add("</p><p>")
+                str.add("</p>\n<p>")
             }
+            if (i > 2 && str.last() != ";;;;;;" && str[str.size - 2] == ";;;;;")
+                str.remove(";;;;;")
             when {
                 letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 0 -> {
                     str.add("<i>")
