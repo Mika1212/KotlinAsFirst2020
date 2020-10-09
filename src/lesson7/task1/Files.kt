@@ -346,7 +346,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' -> str.add("n")
                 letter == 't' && line[i - 1] == '\\' && line[i - 2] == '\\' -> str.add("t")
                 letter == '\\' && line[i + 1] == 'n' && line[i - 1] != '\\' -> str.add("\n")
-                letter == 'n' && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
+                (letter == 'n' || letter == 't') && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
+                letter == '\\' && (line[i + 1] == 'n' || line[i + 1] == 't') && line[i - 1] != '\\' -> continue@loop
                 letter == '*' && line[i - 1] == '*' -> continue@loop
                 letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
                 letter == '~' && line[i - 1] == '~' -> continue@loop
@@ -355,7 +356,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         }
         for (l in str)
-        result.add(l)
+            result.add(l)
         str.clear()
         if (line1.isNotEmpty()) writer.newLine()
     }
