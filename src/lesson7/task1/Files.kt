@@ -290,64 +290,74 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
+    val str = mutableListOf<String>()
     var iNumber = 0
     var bNumber = 0
     var sNumber = 0
+    var newLine = 0
     var emptyLine = false
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
     loop1@ for (line1 in File(inputName).readLines()) {
         if (line1.isNotEmpty()) emptyLine = true
         if (line1.isEmpty() && emptyLine) {
             emptyLine = false
-            writer.write("</p>\n<p>")
-            continue@loop1
+            str.add("</p>\n<p>")
         }
         val line = ";$line1;"
         loop@ for ((i, letter) in line.withIndex()) {
+            if (str.isNotEmpty() && str.last() == ";;;;;;" && str[str.size - 2] == ";;;;;") {
+                str.removeLast()
+                str.removeLast()
+                str.add("</p><p>")
+            }
             when {
                 letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 0 -> {
-                    writer.write("<i>")
+                    str.add("<i>")
                     iNumber++
                 }
                 letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 1 -> {
-                    writer.write("</i>")
+                    str.add("</i>")
                     iNumber++
                 }
                 letter == '*' && line[i + 1] == '*' && line[i - 1] != '*' && line[i + 2] != '*' && bNumber % 2 == 0 -> {
-                    writer.write("<b>")
+                    str.add("<b>")
                     bNumber++
                 }
                 letter == '*' && line[i + 1] == '*' && line[i - 1] != '*' && line[i + 2] != '*' && bNumber % 2 == 1 -> {
-                    writer.write("</b>")
+                    str.add("</b>")
                     bNumber++
                 }
                 letter == '*' && line[i + 1] == '*' && line[i + 2] == '*' && line[i - 1] != '*' -> {
                     if (bNumber % 2 == 0 && iNumber % 2 == 0)
-                        writer.write("<b><i>")
+                        str.add("<b><i>")
                     if (bNumber % 2 == 1 && iNumber % 2 == 1)
-                        writer.write("</b></i>")
+                        str.add("</b></i>")
                     bNumber++
                     iNumber++
                 }
                 letter == '~' && line[i + 1] == '~' && line[i - 1] != '~' && sNumber % 2 == 0 -> {
-                    writer.write("<s>")
+                    str.add("<s>")
                     sNumber++
                 }
                 letter == '~' && line[i + 1] == '~' && line[i - 1] != '~' && sNumber % 2 == 1 -> {
-                    writer.write("</s>")
+                    str.add("</s>")
                     sNumber++
                 }
-                letter == '\\' && line[i + 1] == '\\' -> writer.write('\\'.toString())
-                letter == '\\' && line[i - 1] == '\\' -> writer.write('\\'.toString())
-                letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' -> writer.write("n")
-                letter == 't' && line[i - 1] == '\\' && line[i - 2] == '\\' -> writer.write("t")
+                letter == '\\' && line[i + 1] == 'n' && line[i - 1] != '\\' -> str.add(";;;;;")
+                letter == 'n' && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
+                letter == '\\' && line[i + 1] == '\\' -> str.add('\\'.toString())
+                letter == '\\' && line[i - 1] == '\\' -> str.add('\\'.toString())
+                letter == 'n' && line[i - 1] == '\\' && line[i - 2] == '\\' -> str.add("n")
+                letter == 't' && line[i - 1] == '\\' && line[i - 2] == '\\' -> str.add("t")
                 letter == '*' && line[i - 1] == '*' -> continue@loop
                 letter == '*' && line[i - 1] == '*' && line[i - 2] == '*' -> continue@loop
                 letter == '~' && line[i - 1] == '~' -> continue@loop
                 letter == ';' && (i == 0 || i == line1.length + 1) -> continue@loop
-                else -> writer.write(letter.toString())
+                else -> str.add(letter.toString())
             }
         }
+        writer.write(str.joinToString(separator = ""))
+        str.clear()
         if (line1.isNotEmpty()) writer.newLine()
     }
     writer.write("</p>\n" + "</body>\n" + "</html>\n")
