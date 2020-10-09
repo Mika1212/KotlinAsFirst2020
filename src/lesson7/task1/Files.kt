@@ -296,18 +296,18 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var iNumber = 0
     var bNumber = 0
     var sNumber = 0
+    var newLine = 0
     var emptyLine = false
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
     loop1@ for (line1 in File(inputName).readLines()) {
         if (line1.isNotEmpty()) emptyLine = true
         if (line1.isEmpty() && emptyLine) {
             emptyLine = false
-            writer.write("</p>\n<p>")
-            continue@loop1
+            str.add("</p>\n<p>")
         }
         val line = ";$line1;"
         loop@ for ((i, letter) in line.withIndex()) {
-            if (str.isNotEmpty() && str.last() == ";;;;;" && str[str.size - 2] == ";;;;;") str.add("</p>\n<p>")
+            if (str.isNotEmpty() && str.last() == "\n" && str[str.size - 2] == "\n") str.add("</p>\n<p>")
             when {
                 letter == '*' && line[i + 1] != '*' && line[i - 1] != '*' && iNumber % 2 == 0 -> {
                     str.add("<i>")
@@ -341,7 +341,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     str.add("</s>")
                     sNumber++
                 }
-                letter == '\\' && line[i + 1] == 'n' && line[i - 1] != '\\' -> str.add(";;;;;")
+                letter == '\\' && line[i + 1] == 'n' && line[i - 1] != '\\' -> str.add("\n")
                 letter == 'n' && line[i - 1] == '\\' && line[i - 2] != '\\' -> continue@loop
                 letter == '\\' && line[i + 1] == '\\' -> str.add('\\'.toString())
                 letter == '\\' && line[i - 1] == '\\' -> str.add('\\'.toString())
@@ -354,9 +354,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 else -> str.add(letter.toString())
             }
         }
-        writer.write(str.filter { it != ";;;;;" }.joinToString(separator = ""))
-        if (str.isNotEmpty()) writer.newLine()
+        writer.write(str.joinToString(separator = ""))
         str.clear()
+        if (line1.isNotEmpty()) writer.newLine()
     }
     writer.write("</p>\n" + "</body>\n" + "</html>\n")
     writer.close()
