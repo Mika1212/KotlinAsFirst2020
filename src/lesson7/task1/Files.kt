@@ -2,9 +2,7 @@
 
 package lesson7.task1
 
-import lesson3.task1.digitNumber
 import java.io.File
-import kotlin.math.pow
 
 
 // Урок 7: работа с файлами
@@ -289,7 +287,106 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  */
 
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var iNumber = 0
+    var bNumber = 0
+    var sNumber = 0
+    var slashNumber = 0
+    var emptyLine = false
+    val reader = mutableListOf<String>()
+    reader.add(";")
+    for (line in File(inputName).readLines()) {
+        val line1 = ";$line;"
+        if (line.isNotEmpty()) emptyLine = true
+        if (line.isEmpty() && emptyLine) {
+            emptyLine = false
+            reader.add("</p>\n<p>")
+        }
+        for ((i, letter) in line1.withIndex()) {
+            if (!(letter == 't' && line1[i - 1] == '\\' && slashNumber % 2 == 1))
+                if (!(letter == '\\' && line1[i + 1] == 't' && slashNumber % 2 == 0))
+                    if (!(letter == ';' && (i == 0 || i == line1.length - 1)))
+                        reader.add(letter.toString())
+            if (letter == '\\') slashNumber++ else slashNumber = 0
+        }
+    }
+    reader.add(";")
+    slashNumber = 0
+    val reader1 = mutableListOf<String>()
+    var skip = -1
+    loopA@ for ((i, letter) in reader.withIndex()) {
+        if (skip < i) {
+            if (letter == "\\" && reader[i + 1] == "n" && slashNumber % 2 == 0)
+                if (reader[i + 2] == "\\" && reader[i + 3] == "n") {
+                    reader1.add("</p>\n<p>")
+                    skip = i + 3
+                    continue@loopA
+                } else {
+                    skip = i + 1
+                    continue@loopA
+                }
+            if (letter == "\\") slashNumber++ else slashNumber = 0
+            reader1.add(letter)
+        }
+    }
+
+    var go = true
+    reader1.removeLast()
+    while (go)
+        if (reader1.last() == "</p>\n<p>") reader1.removeLast()
+        else go = false
+
+    val read = reader1.joinToString(separator = "")
+    writer.write("<html>\n" + "<body>\n" + "<p>\n")
+    loop@ for ((i, letter) in read.withIndex()) {
+        when {
+            letter == '*' && read[i + 1] != '*' && read[i - 1] != '*' && iNumber % 2 == 0 -> {
+                writer.write("<i>")
+                iNumber++
+            }
+            letter == '*' && read[i + 1] != '*' && read[i - 1] != '*' && iNumber % 2 == 1 -> {
+                writer.write("</i>")
+                iNumber++
+            }
+            letter == '*' && read[i + 1] == '*' && read[i - 1] != '*' && read[i + 2] != '*' && bNumber % 2 == 0 -> {
+                writer.write("<b>")
+                bNumber++
+            }
+            letter == '*' && read[i + 1] == '*' && read[i - 1] != '*' && read[i + 2] != '*' && bNumber % 2 == 1 -> {
+                writer.write("</b>")
+                bNumber++
+            }
+            letter == '*' && read[i + 1] == '*' && read[i + 2] == '*' && read[i - 1] != '*' -> {
+                if (bNumber % 2 == 0 && iNumber % 2 == 0)
+                    writer.write("<b><i>")
+                if (bNumber % 2 == 1 && iNumber % 2 == 1)
+                    writer.write("</b></i>")
+                bNumber++
+                iNumber++
+            }
+            letter == '~' && read[i + 1] == '~' && read[i - 1] != '~' && sNumber % 2 == 0 -> {
+                writer.write("<s>")
+                sNumber++
+            }
+            letter == '~' && read[i + 1] == '~' && read[i - 1] != '~' && sNumber % 2 == 1 -> {
+                writer.write("</s>")
+                sNumber++
+            }
+            letter == '\\' && read[i + 1] == '\\' -> writer.write('\\'.toString())
+            letter == '\\' && read[i - 1] == '\\' -> writer.write('\\'.toString())
+            letter == 'n' && read[i - 1] == '\\' && slashNumber % 2 == 1 -> writer.write("n")
+            letter == 't' && read[i - 1] == '\\' && slashNumber % 2 == 1 -> writer.write("t")
+            letter == '*' && read[i - 1] == '*' -> continue@loop
+            letter == '*' && read[i - 1] == '*' && read[i - 2] == '*' -> continue@loop
+            letter == '~' && read[i - 1] == '~' -> continue@loop
+            letter == ';' && (i == 0 || i == read.length - 1) -> continue@loop
+            else -> writer.write(letter.toString())
+        }
+        if (letter == '\\') slashNumber++ else slashNumber = 0
+    }
+    if (read.isNotEmpty()) writer.newLine()
+    writer.write("</p>\n" + "</body>\n" + "</html>\n")
+    writer.close()
 }
 
 /**
@@ -458,82 +555,14 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  */
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
+    TODO()
+}
+/*{
     val writer = File(outputName).bufferedWriter()
     var lhv1 = lhv
-    var counter = 0
-    var tab = 0
-    var helperName = 0
-    var mark = false
-    var markChange = 0
+    var digitsLhv= digitNumber(lhv)
+    var digitsRhv = digitNumber(rhv)
     writer.write(" $lhv | $rhv\n")
-    if (lhv < rhv) {
-        writer.write("-0")
-        for (i in 1..digitNumber(lhv) + 2) writer.write(" ")
-        writer.write("0\n")
-        writer.write("--\n ")
-    }
-
-    while (lhv1 >= rhv) {
-
-        var a = 0
-        var k = 0
-        val k2 = digitNumber(lhv1)
-        var helper = 0
-        counter++
-
-        if (mark || lhv==rhv && markChange == 0) markChange++
-
-        for (i in k2 - 1 downTo 0) {
-            k++
-            helper = lhv1 / 10.0.pow(i.toDouble()).toInt()
-
-            if (helper >= rhv) {
-                for (l in 1..tab) writer.write(" ")
-                if (counter != 1) {
-                    if (mark) writer.write("0")
-                    writer.write("$helper\n")
-                    for (j in 1..tab - 1+markChange) writer.write(" ")
-                }
-
-                a = helper / rhv * rhv
-                lhv1 = if (digitNumber(lhv1 - a) > 1)
-                    ((helper - a) * 10.0.pow(digitNumber(lhv1) - i - 1) +
-                            (lhv1 % 10.0.pow(i.toDouble()).toInt())).toInt()
-                else
-                    (helper - a)
-                writer.write("-$a")
-                helperName = digitNumber(a)
-                break
-
-            } else
-                if (counter != 1 && k > 1) {
-                    for (i in 1..tab) writer.write(" ")
-                    writer.write("$helper")
-                    writer.newLine()
-                    for (j in 1..tab) writer.write(" ")
-                    writer.write("-0")
-                    writer.newLine()
-                    for (j in 1..tab) writer.write(" ")
-                    for (j in 1..k+markChange) writer.write("-")
-                    writer.newLine()
-                }
-        }
-
-        if (counter == 1) {
-            val b = lhv / rhv
-            for (i in 0..k2 - helperName + 2) writer.write(" ")
-            writer.write(b.toString())
-        }
-
-        writer.newLine()
-        for (i in 1..tab - 1+markChange) writer.write(" ")
-        for (i in 0..k) writer.write("-")
-        tab += k
-        writer.newLine()
-        mark = helper == a
-    }
-
-    for (i in 1..tab - 1+markChange) writer.write(" ")
-    writer.write("$lhv1")
-    writer.close()
+    writer.write()
 }
+*/
