@@ -359,6 +359,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         else go = false
 
     val read = reader1.joinToString(separator = "")
+    println(read)
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
 
     loop@ for ((i, letter) in read.withIndex()) {
