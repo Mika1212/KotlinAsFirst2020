@@ -406,7 +406,7 @@ Basic, Ruby, Swift.
         )
 
         test(
-            20,
+            2,
             20,
             """
               2 | 20

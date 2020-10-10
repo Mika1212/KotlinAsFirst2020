@@ -468,7 +468,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     writer.write(" $lhv | $rhv\n")
     if (lhv < rhv) {
         writer.write("-0")
-        for (i in 1..digitNumber(lhv) + digitNumber(rhv)) writer.write(" ")
+        for (i in 1..digitNumber(lhv) + 2) writer.write(" ")
         writer.write("0\n")
         writer.write("--\n ")
     }
