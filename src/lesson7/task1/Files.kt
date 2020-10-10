@@ -464,7 +464,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var tab = 0
     var helperName = 0
     var mark = false
-    var markChange =0
+    var markChange = 0
     writer.write(" $lhv | $rhv\n")
     if (lhv < rhv) {
         writer.write("-0")
@@ -473,28 +473,26 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         writer.write("--\n ")
     }
 
-    while (lhv1 > rhv) {
+    while (lhv1 >= rhv) {
 
         var a = 0
         var k = 0
         val k2 = digitNumber(lhv1)
         var helper = 0
         counter++
-        if (mark && markChange==0) {
-            tab++
-            markChange++
-        }
+
+        if (mark && markChange == 0) markChange++
 
         for (i in k2 - 1 downTo 0) {
             k++
             helper = lhv1 / 10.0.pow(i.toDouble()).toInt()
 
             if (helper >= rhv) {
-                for (i in 1..tab) writer.write(" ")
+                for (l in 1..tab) writer.write(" ")
                 if (counter != 1) {
                     if (mark) writer.write("0")
                     writer.write("$helper\n")
-                    for (j in 1..tab - 1) writer.write(" ")
+                    for (j in 1..tab - 1+markChange) writer.write(" ")
                 }
 
                 a = helper / rhv * rhv
@@ -516,11 +514,10 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
                     writer.write("-0")
                     writer.newLine()
                     for (j in 1..tab) writer.write(" ")
-                    for (j in 1..k) writer.write("-")
+                    for (j in 1..k+markChange) writer.write("-")
                     writer.newLine()
                 }
         }
-
 
         if (counter == 1) {
             val b = lhv / rhv
@@ -529,13 +526,14 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         }
 
         writer.newLine()
-        for (i in 1..tab - 1) writer.write(" ")
+        for (i in 1..tab - 1+markChange) writer.write(" ")
         for (i in 0..k) writer.write("-")
         tab += k
         writer.newLine()
         mark = helper == a
     }
-    for (i in 1..tab - 1) writer.write(" ")
+
+    for (i in 1..tab - 1+markChange) writer.write(" ")
     writer.write("$lhv1")
     writer.close()
 }
