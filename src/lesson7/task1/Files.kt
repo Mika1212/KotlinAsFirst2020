@@ -318,10 +318,12 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (skip < i) {
             if (letter == "\\" && reader[i + 1] == "n" && slashNumber % 2 == 0)
                 if (reader[i + 2] == "\\" && reader[i + 3] == "n") {
-                    reader1.add("</p>\n<p>")
+                    if (reader1.last() !="</p>\n<p>")
+                        reader1.add("</p>\n<p>")
                     skip = i + 3
                     continue@loopA
                 } else {
+                    reader1.add(" ")
                     skip = i + 1
                     continue@loopA
                 }
@@ -338,6 +340,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     val read = reader1.joinToString(separator = "")
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
+
     loop@ for ((i, letter) in read.withIndex()) {
         when {
             letter == '*' && read[i + 1] != '*' && read[i - 1] != '*' && iNumber % 2 == 0 -> {
@@ -380,11 +383,11 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             letter == '*' && read[i - 1] == '*' && read[i - 2] == '*' -> continue@loop
             letter == '~' && read[i - 1] == '~' -> continue@loop
             letter == ';' && (i == 0 || i == read.length - 1) -> continue@loop
+            letter == ' ' -> continue@loop
             else -> writer.write(letter.toString())
         }
         if (letter == '\\') slashNumber++ else slashNumber = 0
     }
-    if (read.isNotEmpty()) writer.newLine()
     writer.write("</p>\n" + "</body>\n" + "</html>\n")
     writer.close()
 }
