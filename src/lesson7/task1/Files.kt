@@ -295,6 +295,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var emptyLine = false
     val reader = mutableListOf<String>()
     reader.add(";")
+    var skip = -1
     for (line in File(inputName).readLines()) {
         val line1 = ";$line;"
         if (line.isNotEmpty()) emptyLine = true
@@ -303,32 +304,51 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             reader.add("</p>\n<p>")
         }
         for ((i, letter) in line1.withIndex()) {
-            if (!(letter == 't' && line1[i - 1] == '\\' && slashNumber % 2 == 1))
-                if (!(letter == '\\' && line1[i + 1] == 't' && slashNumber % 2 == 0))
-                    if (!(letter == ';' && (i == 0 || i == line1.length - 1)))
-                        reader.add(letter.toString())
-            if (letter == '\\') slashNumber++ else slashNumber = 0
+            if (skip < i) {
+                if (!(letter == '\\' && line1[i + 1] == 't' && slashNumber % 2 == 0)) {
+                    if (!(letter == 't' && line1[i - 1] == '\\' && slashNumber % 2 == 1))
+                        if (!(letter == ';' && (i == 0 || i == line1.length - 1)))
+                            reader.add(letter.toString())
+                } else {
+                    reader.add(" ")
+                    skip = i + 1
+                }
+
+                if (letter == '\\') slashNumber++ else slashNumber = 0
+            }
         }
     }
+
     reader.add(";")
     slashNumber = 0
     val reader1 = mutableListOf<String>()
-    var skip = -1
+    skip = -1
+    var lucky = false
+
     loopA@ for ((i, letter) in reader.withIndex()) {
+        var counter = 0
         if (skip < i) {
-            if (letter == "\\" && reader[i + 1] == "n" && slashNumber % 2 == 0)
-                if (reader[i + 2] == "\\" && reader[i + 3] == "n") {
-                    if (reader1.last() !="</p>\n<p>")
+            if (letter == "\\" && reader[i + 1] == "n" && slashNumber % 2 == 0) {
+                if (reader[i + 2] == " ")
+                    for (j in i + 2 until reader.joinToString(separator = "").length) {
+                        if (reader[j] == "\\" && reader[j + 1] == "n") lucky = true
+                        if (reader[j] != " ") break
+                        counter++
+                    }
+                if (reader[i + 2] == "\\" && reader[i + 3] == "n" || lucky) {
+                    if (reader1.last() != "</p>\n<p>")
                         reader1.add("</p>\n<p>")
-                    skip = i + 3
+                    skip = i + 3 + counter
                     continue@loopA
                 } else {
                     reader1.add(" ")
                     skip = i + 1
                     continue@loopA
                 }
+            }
             if (letter == "\\") slashNumber++ else slashNumber = 0
             reader1.add(letter)
+            lucky = false
         }
     }
 
