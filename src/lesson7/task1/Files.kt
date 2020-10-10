@@ -481,7 +481,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         var helper = 0
         counter++
 
-        if (mark && markChange == 0) markChange++
+        if (mark || lhv==rhv && markChange == 0) markChange++
 
         for (i in k2 - 1 downTo 0) {
             k++
