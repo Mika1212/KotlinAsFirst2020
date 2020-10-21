@@ -318,9 +318,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (letter == "</p>\n<p>") read1.removeLast()
         if (letter != " ") break
     }
-    if (reader.first() == "</p>\n<p>") read1.removeFirst()
-    read1.add(0, ";")
-    read1.add(";")
+    for (letter in reader) {
+        if (letter == "</p>\n<p>") read1.removeFirst()
+        if (letter != " ") break
+    }
 
     val read = read1.joinToString(separator = "")
 
