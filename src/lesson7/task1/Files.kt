@@ -323,7 +323,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (letter != " ") break
     }
 
-    val read = read1.joinToString(separator = "")
+    val read = ";" + read1.joinToString(separator = "") + ";"
 
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
 
