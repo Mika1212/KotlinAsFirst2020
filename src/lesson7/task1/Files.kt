@@ -294,8 +294,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var bNumber = 0
     var sNumber = 0
     val reader = mutableListOf<String>()
-    reader.add(";")
-
     var mark = 0
     val actual = File(inputName).readText().replace(Regex("""(\n\s*\n)"""), "☠☠☠☠☠")
         .replace(Regex("[\\t\\n]"), " ")
@@ -320,7 +318,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         if (letter == "</p>\n<p>") read1.removeLast()
         if (letter != " ") break
     }
-
+    if (reader.first() == "</p>\n<p>") read1.removeFirst()
+    read1.add(0, ";")
     read1.add(";")
 
     val read = read1.joinToString(separator = "")
