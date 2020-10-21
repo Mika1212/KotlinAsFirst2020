@@ -297,7 +297,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     reader.add(";")
 
     var mark = 0
-    val actual = File(inputName).readText().replace(Regex("[\\n]"), "☠☠☠☠☠")
+    val actual = File(inputName).readText().replace(Regex("[\\n]"), "☠☠☠☠☠ ")
         .replace(Regex("[\\t]"), " ")
     loopQ@ for (letter in actual) {
         if (letter == ' ') {
@@ -314,12 +314,16 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
         }
     }
 
-    reader.add(";")
+    val read1 = reader.toMutableList()
 
-    for (letter in reader)
-        println(letter)
+    for (letter in reader.reversed()) {
+        if (letter == "</p>\n<p>") read1.removeLast()
+        if (letter != " ") break
+    }
 
-    val read = reader.joinToString(separator = "")
+    read1.add(";")
+
+    val read = read1.joinToString(separator = "")
 
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
 
@@ -539,83 +543,5 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  */
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    val writer = File(outputName).bufferedWriter()
-    var lhv1 = lhv
-    var counter = 0
-    var tab = 0
-    var helperName = 0
-    var mark = false
-    var markChange = 0
-    writer.write(" $lhv | $rhv\n")
-    if (lhv < rhv) {
-        writer.write("-0")
-        for (i in 1..digitNumber(lhv) + 2) writer.write(" ")
-        writer.write("0\n")
-        writer.write("--\n ")
-    }
-
-    while (lhv1 >= rhv) {
-
-        var a = 0
-        var k = 0
-        val k2 = digitNumber(lhv1)
-        var helper = 0
-        counter++
-
-        if (mark || lhv == rhv || lhv % rhv == 0 && markChange == 0) markChange++
-
-        for (i in k2 - 1 downTo 0) {
-            k++
-            helper = lhv1 / 10.0.pow(i.toDouble()).toInt()
-
-            if (helper >= rhv) {
-                for (l in 1..tab) writer.write(" ")
-                if (counter != 1) {
-                    if (mark) writer.write("0")
-                    writer.write("$helper\n")
-                    for (j in 1..tab - 1 + markChange) writer.write(" ")
-                }
-
-                a = helper / rhv * rhv
-                lhv1 = if (digitNumber(lhv1 - a) > 1)
-                    ((helper - a) * 10.0.pow(digitNumber(lhv1) - i - 1) +
-                            (lhv1 % 10.0.pow(i.toDouble()).toInt())).toInt()
-                else
-                    (helper - a)
-                writer.write("-$a")
-                helperName = digitNumber(a)
-                break
-
-            } else
-                if (counter != 1 && k > 1) {
-                    for (i in 1..tab) writer.write(" ")
-                    writer.write("$helper")
-                    writer.newLine()
-                    for (j in 1..tab) writer.write(" ")
-                    writer.write("-0")
-                    writer.newLine()
-                    for (j in 1..tab) writer.write(" ")
-                    for (j in 1..k + markChange) writer.write("-")
-                    writer.newLine()
-                }
-        }
-
-        if (counter == 1) {
-            val b = lhv / rhv
-            for (i in 0..k2 - helperName + 2) writer.write(" ")
-            writer.write(b.toString())
-        }
-
-        writer.newLine()
-        for (i in 1..tab - 1 + markChange) writer.write(" ")
-        for (i in 0..k) writer.write("-")
-        tab += k
-        writer.newLine()
-        mark = helper == a
-    }
-
-    markChange = if (counter == 1) 1 else 0
-    for (i in 1..tab - 1 + markChange) writer.write(" ")
-    writer.write("$lhv1")
-    writer.close()
+    TODO()
 }
