@@ -298,8 +298,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     var mark = 0
     val actual = File(inputName).readText().replace(Regex("""(\n\s*\n)"""), "☠☠☠☠☠")
-        .replace(Regex("[\\t]"), " ").replace(Regex("[\\n]"), " ")
-    loopQ@ for ((i,letter) in actual.withIndex()) {
+        .replace(Regex("[\\t\\n]"), " ")
+    loopQ@ for ((i, letter) in actual.withIndex()) {
         if (letter == ' ') {
             if (mark != 0) continue@loopQ
             reader.add(" ")
@@ -361,9 +361,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 writer.write("</s>")
                 sNumber++
             }
-            letter == '\\' && read[i + 1] == 't' -> writer.write("\\\\t")
+            letter == '\\' && read[i + 1] == 't' -> writer.write("\\t")
             letter == 't' && read[i - 1] == '\\' -> continue@loop
-            letter == '\\' && read[i + 1] == 'n' -> writer.write("\\\\n")
+            letter == '\\' && read[i + 1] == 'n' -> writer.write("\\n")
             letter == 'n' && read[i - 1] == '\\' -> continue@loop
             letter == '*' && read[i - 1] == '*' -> continue@loop
             letter == '*' && read[i - 1] == '*' && read[i - 2] == '*' -> continue@loop
