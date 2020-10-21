@@ -297,17 +297,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     reader.add(";")
 
     var mark = 0
-    val actual = File(inputName).readText().replace(Regex("[\\n]"), "☠☠☠☠☠ ")
-        .replace(Regex("[\\t]"), " ")
-    loopQ@ for (letter in actual) {
+    val actual = File(inputName).readText().replace(Regex("""(\n\s*\n)"""), "☠☠☠☠☠")
+        .replace(Regex("[\\t]"), " ").replace(Regex("[\\n]"), " ")
+    loopQ@ for ((i,letter) in actual.withIndex()) {
         if (letter == ' ') {
             if (mark != 0) continue@loopQ
-            reader.add(letter.toString())
+            reader.add(" ")
             continue@loopQ
         }
         if (letter == '☠') {
             mark++
-            if (mark == 10) reader.add("</p>\n<p>")
+            if (mark == 5) reader.add("</p>\n<p>")
         } else {
             mark = 0
             reader.add(letter.toString())
