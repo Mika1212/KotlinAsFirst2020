@@ -2,7 +2,9 @@
 
 package lesson7.task1
 
+import lesson3.task1.digitNumber
 import java.io.File
+import kotlin.math.pow
 
 
 // Урок 7: работа с файлами
@@ -291,78 +293,33 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var iNumber = 0
     var bNumber = 0
     var sNumber = 0
-    var slashNumber = 0
-    var emptyLine = false
     val reader = mutableListOf<String>()
     reader.add(";")
-    var skip = -1
-    for (line in File(inputName).readLines()) {
-        val line1 = ";$line;"
-        if (line.isNotEmpty()) emptyLine = true
-        if (line.isEmpty() && emptyLine) {
-            emptyLine = false
-            reader.add("</p>\n<p>")
-        }
-        loopB@ for ((i, letter) in line1.withIndex()) {
-            if (skip < i) {
-                if (!(letter == '\\' && line1[i + 1] == 't' && slashNumber % 2 == 0)) {
-                    if (!(letter == 't' && line1[i - 1] == '\\' && slashNumber % 2 == 1))
-                        if (!(letter == ';' && (i == 0 || i == line1.length - 1)))
-                            reader.add(letter.toString())
-                } else {
-                    reader.add(" ")
-                    skip = i + 1
-                    slashNumber = 0
-                    continue@loopB
-                }
 
-                if (letter == '\\') slashNumber++ else slashNumber = 0
-            }
+    var mark = 0
+    val actual = File(inputName).readText().replace(Regex("[\\n]"), "☠☠☠☠☠")
+        .replace(Regex("[\\t]"), " ")
+    loopQ@ for (letter in actual) {
+        if (letter == ' ') {
+            if (mark != 0) continue@loopQ
+            reader.add(letter.toString())
+            continue@loopQ
+        }
+        if (letter == '☠') {
+            mark++
+            if (mark == 10) reader.add("</p>\n<p>")
+        } else {
+            mark = 0
+            reader.add(letter.toString())
         }
     }
 
     reader.add(";")
-    slashNumber = 0
-    val reader1 = mutableListOf<String>()
-    skip = -1
-    var lucky = false
 
-    loopA@ for ((i, letter) in reader.withIndex()) {
-        var counter = 0
-        if (skip < i) {
-            if (letter == "\\" && reader[i + 1] == "n" && slashNumber % 2 == 0) {
-                if (reader[i + 2] == " ")
-                    for (j in i + 2 until reader.joinToString(separator = "").length) {
-                        if (reader[j] == "\\" && reader[j + 1] == "n") lucky = true
-                        if (reader[j] != " ") break
-                        counter++
-                    }
-                if (reader[i + 2] == "\\" && reader[i + 3] == "n" || lucky) {
-                    if (reader1.last() != "</p>\n<p>")
-                        reader1.add("</p>\n<p>")
-                    skip = i + 3 + counter
-                    lucky = false
-                    slashNumber = 0
-                    continue@loopA
-                } else {
-                    reader1.add(" ")
-                    skip = i + 1
-                    slashNumber = 0
-                    continue@loopA
-                }
-            }
-            if (letter == "\\") slashNumber++ else slashNumber = 0
-            reader1.add(letter)
-        }
-    }
+    for (letter in reader)
+        println(letter)
 
-    var go = true
-    reader1.removeLast()
-    while (go)
-        if (reader1.last() == "</p>\n<p>") reader1.removeLast()
-        else go = false
-
-    val read = reader1.joinToString(separator = "")
+    val read = reader.joinToString(separator = "")
 
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
 
@@ -400,10 +357,10 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 writer.write("</s>")
                 sNumber++
             }
-            letter == '\\' && read[i + 1] == '\\' -> writer.write('\\'.toString())
-            letter == '\\' && read[i - 1] == '\\' -> writer.write('\\'.toString())
-            letter == 'n' && read[i - 1] == '\\' && slashNumber % 2 == 1 -> writer.write("n")
-            letter == 't' && read[i - 1] == '\\' && slashNumber % 2 == 1 -> writer.write("t")
+            letter == '\\' && read[i + 1] == 't' -> writer.write("\\\\t")
+            letter == 't' && read[i - 1] == '\\' -> continue@loop
+            letter == '\\' && read[i + 1] == 'n' -> writer.write("\\\\n")
+            letter == 'n' && read[i - 1] == '\\' -> continue@loop
             letter == '*' && read[i - 1] == '*' -> continue@loop
             letter == '*' && read[i - 1] == '*' && read[i - 2] == '*' -> continue@loop
             letter == '~' && read[i - 1] == '~' -> continue@loop
@@ -411,7 +368,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             letter == ' ' -> continue@loop
             else -> writer.write(letter.toString())
         }
-        if (letter == '\\') slashNumber++ else slashNumber = 0
     }
     writer.write("</p>\n" + "</body>\n" + "</html>\n")
     writer.close()
@@ -583,14 +539,83 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  */
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
-}
-/*{
     val writer = File(outputName).bufferedWriter()
     var lhv1 = lhv
-    var digitsLhv= digitNumber(lhv)
-    var digitsRhv = digitNumber(rhv)
+    var counter = 0
+    var tab = 0
+    var helperName = 0
+    var mark = false
+    var markChange = 0
     writer.write(" $lhv | $rhv\n")
-    writer.write()
+    if (lhv < rhv) {
+        writer.write("-0")
+        for (i in 1..digitNumber(lhv) + 2) writer.write(" ")
+        writer.write("0\n")
+        writer.write("--\n ")
+    }
+
+    while (lhv1 >= rhv) {
+
+        var a = 0
+        var k = 0
+        val k2 = digitNumber(lhv1)
+        var helper = 0
+        counter++
+
+        if (mark || lhv == rhv || lhv % rhv == 0 && markChange == 0) markChange++
+
+        for (i in k2 - 1 downTo 0) {
+            k++
+            helper = lhv1 / 10.0.pow(i.toDouble()).toInt()
+
+            if (helper >= rhv) {
+                for (l in 1..tab) writer.write(" ")
+                if (counter != 1) {
+                    if (mark) writer.write("0")
+                    writer.write("$helper\n")
+                    for (j in 1..tab - 1 + markChange) writer.write(" ")
+                }
+
+                a = helper / rhv * rhv
+                lhv1 = if (digitNumber(lhv1 - a) > 1)
+                    ((helper - a) * 10.0.pow(digitNumber(lhv1) - i - 1) +
+                            (lhv1 % 10.0.pow(i.toDouble()).toInt())).toInt()
+                else
+                    (helper - a)
+                writer.write("-$a")
+                helperName = digitNumber(a)
+                break
+
+            } else
+                if (counter != 1 && k > 1) {
+                    for (i in 1..tab) writer.write(" ")
+                    writer.write("$helper")
+                    writer.newLine()
+                    for (j in 1..tab) writer.write(" ")
+                    writer.write("-0")
+                    writer.newLine()
+                    for (j in 1..tab) writer.write(" ")
+                    for (j in 1..k + markChange) writer.write("-")
+                    writer.newLine()
+                }
+        }
+
+        if (counter == 1) {
+            val b = lhv / rhv
+            for (i in 0..k2 - helperName + 2) writer.write(" ")
+            writer.write(b.toString())
+        }
+
+        writer.newLine()
+        for (i in 1..tab - 1 + markChange) writer.write(" ")
+        for (i in 0..k) writer.write("-")
+        tab += k
+        writer.newLine()
+        mark = helper == a
+    }
+
+    markChange = if (counter == 1) 1 else 0
+    for (i in 1..tab - 1 + markChange) writer.write(" ")
+    writer.write("$lhv1")
+    writer.close()
 }
-*/
