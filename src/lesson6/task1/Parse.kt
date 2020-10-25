@@ -204,8 +204,9 @@ fun bestLongJump(jumps: String): Int {
 fun bestHighJump(jumps: String): Int {
     try {
         val set = setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '%', ' ', '+')
+        val set1= setOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', ' ')
         for (i in jumps) if (i !in set) return -1
-        val a = jumps.split(" ").filter(fun(it: String) = it in "0".."9" || it == "+")
+        val a = jumps.filter { it in set1 }.split(" ")
         val checklist = mutableListOf<String>()
         if (a.isNotEmpty()) for (i in 0 until a.size) if (a[i] == "+") checklist.add(a[i - 1])
         var a1 = -1
