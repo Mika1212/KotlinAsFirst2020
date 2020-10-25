@@ -148,8 +148,69 @@ fun centerFile(inputName: String, outputName: String) {
  */
 
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var max = 0
+    val counter = mutableMapOf<String, Int>()
+    for (line in File(inputName).readLines()) {
+        counter[line] = -1
+        var line1 = line
+        if (line1.isNotEmpty()) while (line1[0] == ' ') line1 = line1.trim()
+        for (word in line1.split(" ")) counter[line] = counter[line]!! + 1
+        if (line1.length > max)
+            max = line1.length
+    }
+    for (line in File(inputName).readLines()) {
+        var numberOfOptionalSpaces = 0
+        var numberOfSpaces = 0
+        var line1 = line
+        if (line1.isNotEmpty()) while (line1[0] == ' ') line1 = line1.trim()
+        when {
+            line.isEmpty() -> writer.newLine()
+            counter[line] == 0 -> {
+                writer.write(line1)
+                writer.newLine()
+            }
+            max - line1.length > 0 -> {
+                if ((max - line1.length + counter[line]!!) / (counter[line]!!) > 0)
+                    numberOfSpaces = (max - line1.length + counter[line]!!) / (counter[line]!!)
+                if ((max - line1.length + counter[line]!!) % (counter[line]!!) != 0)
+                    numberOfOptionalSpaces = (max - line1.length + counter[line]!!) % (counter[line]!!)
+                if ((max - line1.length + counter[line]!!) / (counter[line]!!) < 0)
+                    numberOfOptionalSpaces = (max - line1.length + counter[line]!!)
+                for (word in line1.split(" ")) {
+                    counter[line] = counter[line]!! - 1
+                    writer.write(word)
+                    if (counter[line] != -1)
+                        for (p in 1..numberOfSpaces) writer.write(" ")
+                    if (numberOfOptionalSpaces > 0) {
+                        writer.write(" ")
+                        numberOfOptionalSpaces -= 1
+                    }
+                }
+                writer.newLine()
+            }
+            max == line1.length -> {
+                writer.write(line1)
+                writer.newLine()
+            }
+        }
+    }
+    writer.close()
 }
+
+/*
+    var writer = File(outputName).bufferedWriter()
+    var spaceNumber = 0
+
+    for (line in File(inputName).readLines()) {
+        if (line.isNotEmpty()) {
+            for (letter in line) {
+                if (letter == ' ') spaceNumber++
+            }
+        }
+    }
+}
+*/
 
 /**
  * Средняя (14 баллов)
