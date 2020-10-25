@@ -190,7 +190,12 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 writer.newLine()
             }
             max == line1.length -> {
-                writer.write(line1)
+                for (word in line1.split(" ")) {
+                    counter[line] = counter[line]!! - 1
+                    writer.write(word)
+                    if (counter[line] != -1)
+                        writer.write(" ")
+                }
                 writer.newLine()
             }
         }
