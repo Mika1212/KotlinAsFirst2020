@@ -163,7 +163,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         var numberOfOptionalSpaces = 0
         var numberOfSpaces = 0
         var line1 = line
-        if (line1.isNotEmpty()) while (line1[0] == ' ') line1 = line1.trim()
+        if (line1.isNotEmpty()) while (line1[0] == ' ' || line1.last() == ' ') line1 = line1.trim()
         when {
             line.isEmpty() -> writer.newLine()
             counter[line] == 0 -> {
@@ -171,11 +171,10 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 writer.newLine()
             }
             max - line1.length > 0 -> {
-                if ((max - line1.length + counter[line]!!) / (counter[line]!!) > 0)
-                    numberOfSpaces = (max - line1.length + counter[line]!!) / (counter[line]!!)
+                numberOfSpaces = (max - line1.length + counter[line]!!) / (counter[line]!!)
                 if ((max - line1.length + counter[line]!!) % (counter[line]!!) != 0)
                     numberOfOptionalSpaces = (max - line1.length + counter[line]!!) % (counter[line]!!)
-                if ((max - line1.length + counter[line]!!) / (counter[line]!!) < 0)
+                else if ((max - line1.length + counter[line]!!) / (counter[line]!!) < 1)
                     numberOfOptionalSpaces = (max - line1.length + counter[line]!!)
                 for (word in line1.split(" ")) {
                     counter[line] = counter[line]!! - 1
@@ -200,10 +199,19 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             }
         }
     }
+    println("${11 / 3}")
     writer.close()
 }
 
 /*
+
+if ((max - line1.length + counter[line]!!) / (counter[line]!!) > 0)
+                    numberOfSpaces = (max - line1.length + counter[line]!!) / (counter[line]!!)
+                if ((max - line1.length + counter[line]!!) % (counter[line]!!) != 0)
+                    numberOfOptionalSpaces = (max - line1.length + counter[line]!!) % (counter[line]!!)
+                if ((max - line1.length + counter[line]!!) / (counter[line]!!) < 1)
+                    numberOfOptionalSpaces = (max - line1.length + counter[line]!!)
+
     var writer = File(outputName).bufferedWriter()
     var spaceNumber = 0
 
