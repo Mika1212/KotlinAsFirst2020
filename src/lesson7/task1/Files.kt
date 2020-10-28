@@ -158,7 +158,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         for (word in lineX.split(" "))
             if (word != "") line1.add(word)
         counter[line] = line1.size
-        println(line1)
+
 
         if (lineX.length > max)
             max = lineX.length
@@ -178,10 +178,11 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 writer.newLine()
             }
             max - line1.joinToString(separator = " ").length > 0 -> {
-                numberOfSpaces = (max - line1.joinToString(separator = " ").length + counter[line]!!) / (counter[line]!!-1)
+                numberOfSpaces = (max - line1.joinToString(separator = " ").length + counter[line]!!-1) / (counter[line]!! - 1)
+
                 if ((max - line1.joinToString(separator = " ").length) % (counter[line]!! - 1) != 0)
-                    numberOfOptionalSpaces = (max - line1.joinToString(separator = " ").length + counter[line]!!) % (counter[line]!! - 1)
-                else if ((max - line1.joinToString(separator = " ").length + counter[line]!!) / (counter[line]!! - 1) < 1)
+                    numberOfOptionalSpaces = (max - line1.joinToString(separator = " ").length) % (counter[line]!! - 1)
+                else if ((max - line1.joinToString(separator = " ").length) / (counter[line]!! - 1) < 1)
                     numberOfOptionalSpaces = (max - line1.joinToString(separator = " ").length + counter[line]!!)
                 for (word in line1) {
                     counter[line] = counter[line]!! - 1
@@ -206,7 +207,6 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             }
         }
     }
-    println(("fgfgh  fgg   fhfh hfh").replace(Regex("""[\s]"""), "1"))
     writer.close()
 }
 
