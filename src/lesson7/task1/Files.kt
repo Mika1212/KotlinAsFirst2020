@@ -179,8 +179,10 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             }
             max - line1.joinToString(separator = " ").length > 0 -> {
                 numberOfSpaces = (max - line1.joinToString(separator = " ").length + counter[line]!!) / (counter[line]!!-1)
-                numberOfOptionalSpaces = (max - line1.joinToString(separator = " ").length) % (counter[line]!! - 1)
-
+                if ((max - line1.joinToString(separator = " ").length) % (counter[line]!! - 1) != 0)
+                    numberOfOptionalSpaces = (max - line1.joinToString(separator = " ").length + counter[line]!!) % (counter[line]!! - 1)
+                else if ((max - line1.joinToString(separator = " ").length + counter[line]!!) / (counter[line]!! - 1) < 1)
+                    numberOfOptionalSpaces = (max - line1.joinToString(separator = " ").length + counter[line]!!)
                 for (word in line1) {
                     counter[line] = counter[line]!! - 1
                     writer.write(word)
