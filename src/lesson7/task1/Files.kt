@@ -173,7 +173,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
             if (word != "") line1.add(word)
         when {
             line.isEmpty() -> writer.newLine()
-            counter[line] == 0 -> {
+            counter[line] == 1 -> {
                 writer.write(lineX)
                 writer.newLine()
             }
