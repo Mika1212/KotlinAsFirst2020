@@ -134,7 +134,11 @@ fun diameter(vararg points: Point): Segment {
             maxY = y
         }
     }
-    return Segment(Point(maxX, maxY), Point(minX, minY))
+    try {
+        return Segment(Point(maxX, maxY), Point(minX, minY))
+    } catch (e: IllegalArgumentException) {
+        throw e
+    }
 }
 
 /**
