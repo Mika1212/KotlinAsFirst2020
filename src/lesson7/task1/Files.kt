@@ -152,39 +152,32 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     var max = 0
     val counter = mutableMapOf<String, Int>()
     for (line in File(inputName).readLines()) {
-        var lineX = line
-        if (lineX.isNotEmpty()) while (lineX[0] == ' ' || lineX.last() == ' ') lineX = lineX.trim()
-        val line1 = mutableListOf<String>()
-        for (word in lineX.split(" "))
-            if (word != "") line1.add(word)
-        counter[line] = line1.size
-
-
-        if (lineX.length > max)
-            max = lineX.length
+        var line1 = line
+        if (line1.isNotEmpty()) while (line1[0] == ' ' || line1.last() == ' ') line1 = line1.trim()
+        counter[line] = line1.split(" ").filter { it != "" }.size
+        if (line1.length > max)
+            max = line1.length
     }
     for (line in File(inputName).readLines()) {
         var numberOfOptionalSpaces = 0
         var numberOfSpaces = 0
-        var lineX = line
-        if (lineX.isNotEmpty()) while (lineX[0] == ' ' || lineX.last() == ' ') lineX = lineX.trim()
-        val line1 = mutableListOf<String>()
-        for (word in lineX.split(" "))
-            if (word != "") line1.add(word)
+        var line1 = line.split(" ").filter { it != "" }.joinToString(separator = " ")
+        if (line1.isNotEmpty()) while (line1[0] == ' ' || line1.last() == ' ') line1 = line1.trim()
         when {
             line.isEmpty() -> writer.newLine()
             counter[line] == 1 -> {
-                writer.write(lineX)
+                writer.write(line1)
                 writer.newLine()
             }
-            max - line1.joinToString(separator = " ").length > 0 -> {
-                numberOfSpaces = (max - line1.joinToString(separator = " ").length + counter[line]!!-1) / (counter[line]!! - 1)
+            max - line1.length > 0 -> {
 
-                if ((max - line1.joinToString(separator = " ").length) % (counter[line]!! - 1) != 0)
-                    numberOfOptionalSpaces = (max - line1.joinToString(separator = " ").length) % (counter[line]!! - 1)
-                else if ((max - line1.joinToString(separator = " ").length) / (counter[line]!! - 1) < 1)
-                    numberOfOptionalSpaces = (max - line1.joinToString(separator = " ").length + counter[line]!!)
-                for (word in line1) {
+                numberOfSpaces = (max - line1.length + counter[line]!! - 1) / (counter[line]!! - 1)
+
+                if ((max - line1.length) % (counter[line]!! - 1) != 0)
+                    numberOfOptionalSpaces = (max - line1.length) % (counter[line]!! - 1)
+                else if ((max - line1.length) / (counter[line]!! - 1) < 1)
+                    numberOfOptionalSpaces = (max - line1.length + counter[line]!!)
+                for (word in line1.split(" ")) {
                     counter[line] = counter[line]!! - 1
                     writer.write(word)
                     if (counter[line] != 0)
@@ -196,8 +189,8 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 }
                 writer.newLine()
             }
-            max == lineX.length -> {
-                for (word in lineX.split(" ")) {
+            max == line1.length -> {
+                for (word in line1.split(" ")) {
                     counter[line] = counter[line]!! - 1
                     writer.write(word)
                     if (counter[line] != 0)
