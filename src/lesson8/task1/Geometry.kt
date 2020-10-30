@@ -120,6 +120,8 @@ fun diameter(vararg points: Point): Segment {
     var numberTwo = Point(0.0, 0.0)
     for (arg in points) {
         i++
+        if (i == 1) numberOne = arg
+        if (i == 2) numberTwo = arg
         if (numberOne.distance(arg) > numberOne.distance(numberTwo) ||
             numberTwo.distance(arg) > numberOne.distance(numberTwo)
         )
