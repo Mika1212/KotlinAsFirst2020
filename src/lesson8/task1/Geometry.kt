@@ -116,24 +116,29 @@ data class Segment(val begin: Point, val end: Point) {
 fun diameter(vararg points: Point): Segment {
     var (maxX, maxY) = Pair(0.0, 0.0)
     var (minX, minY) = Pair(0.0, 0.0)
+    var i = 0
     for ((x, y) in points) {
-        if (x > maxX) {
-            maxX = x
-            maxY = y
-        }
-        if (x < minX) {
-            minX = x
-            minY = y
-        }
-        if (y > maxY) {
-            maxX = x
-            maxY = y
-        }
-        if (y < minY) {
-            maxX = x
-            maxY = y
+        i++
+        when {
+            x > maxX -> {
+                maxX = x
+                maxY = y
+            }
+            x < minX -> {
+                minX = x
+                minY = y
+            }
+            y > maxY -> {
+                maxX = x
+                maxY = y
+            }
+            y < minY -> {
+                maxX = x
+                maxY = y
+            }
         }
     }
+    if (i < 2) throw IllegalArgumentException()
     try {
         return Segment(Point(maxX, maxY), Point(minX, minY))
     } catch (e: IllegalArgumentException) {
