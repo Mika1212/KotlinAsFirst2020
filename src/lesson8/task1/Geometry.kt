@@ -82,10 +82,11 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double = if (distance(other)
+    fun distance(other: Circle): Double = if (sqrt(sqr(center.x - other.center.x) + sqr(center.y - other.center.y))
         < radius + other.radius
-    ) 0.0 else
-        distance(other) - radius - other.radius
+    )
+        0.0 else
+        sqrt(sqr(center.x - other.center.x) + sqr(center.y - other.center.y)) - radius - other.radius
 
     /**
      * Тривиальная (1 балл)
@@ -114,33 +115,22 @@ data class Segment(val begin: Point, val end: Point) {
  */
 
 fun diameter(vararg points: Point): Segment {
-    var (maxX, maxY) = Pair(0.0, 0.0)
-    var (minX, minY) = Pair(0.0, 0.0)
     var i = 0
-    for ((x, y) in points) {
+    var numberOne = Point(0.0, 0.0)
+    var numberTwo = Point(0.0, 0.0)
+    for (arg in points) {
         i++
-        when {
-            x > maxX -> {
-                maxX = x
-                maxY = y
-            }
-            x < minX -> {
-                minX = x
-                minY = y
-            }
-            y > maxY -> {
-                maxX = x
-                maxY = y
-            }
-            y < minY -> {
-                maxX = x
-                maxY = y
-            }
-        }
+        if (numberOne.distance(arg) > numberOne.distance(numberTwo) ||
+            numberTwo.distance(arg) > numberOne.distance(numberTwo)
+        )
+            if (numberOne.distance(arg) > numberTwo.distance(arg))
+                numberTwo = arg
+            else
+                numberOne = arg
     }
     if (i < 2) throw IllegalArgumentException()
     try {
-        return Segment(Point(maxX, maxY), Point(minX, minY))
+        return Segment(numberOne, numberTwo)
     } catch (e: IllegalArgumentException) {
         throw e
     }
