@@ -82,7 +82,10 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double = TODO()
+    fun distance(other: Circle): Double = if (distance(other)
+        < radius + other.radius
+    ) 0.0 else
+        distance(other) - radius - other.radius
 
     /**
      * Тривиальная (1 балл)
@@ -109,7 +112,30 @@ data class Segment(val begin: Point, val end: Point) {
  * Дано множество точек. Вернуть отрезок, соединяющий две наиболее удалённые из них.
  * Если в множестве менее двух точек, бросить IllegalArgumentException
  */
-fun diameter(vararg points: Point): Segment = TODO()
+
+fun diameter(vararg points: Point): Segment {
+    var (maxX, maxY) = Pair(0.0, 0.0)
+    var (minX, minY) = Pair(0.0, 0.0)
+    for ((x, y) in points) {
+        if (x > maxX) {
+            maxX = x
+            maxY = y
+        }
+        if (x < minX) {
+            minX = x
+            minY = y
+        }
+        if (y > maxY) {
+            maxX = x
+            maxY = y
+        }
+        if (y < minY) {
+            maxX = x
+            maxY = y
+        }
+    }
+    return Segment(Point(maxX, maxY), Point(minX, minY))
+}
 
 /**
  * Простая (2 балла)
