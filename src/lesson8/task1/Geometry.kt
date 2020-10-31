@@ -115,24 +115,23 @@ data class Segment(val begin: Point, val end: Point) {
  */
 
 fun diameter(vararg points: Point): Segment {
-    var i = 0
-    var numberOne = Point(0.0, 0.0)
-    var numberTwo = Point(0.0, 0.0)
-    for (arg in points) {
-        i++
-        if (i == 1) numberOne = arg
-        if (i == 2) numberTwo = arg
-        if (numberOne.distance(arg) > numberOne.distance(numberTwo) ||
-            numberTwo.distance(arg) > numberOne.distance(numberTwo)
-        )
-            if (numberOne.distance(arg) > numberTwo.distance(arg))
-                numberTwo = arg
-            else
-                numberOne = arg
-    }
-    if (i < 2) throw IllegalArgumentException()
+    val result = mutableMapOf<Double, Pair<Point, Point>>()
+    var max = 0.0
+    for (arg in points)
+        for (arg1 in points) {
+            result[arg.distance(arg1)] = Pair(arg, arg1)
+            max = arg.distance(arg1)
+        }
+    if (result.size < 2) throw IllegalArgumentException()
+    var (a, b) = Pair(Point(0.0, 0.0), Point(0.0, 0.0))
+    for ((distance, pair) in result)
+        if (distance > max) {
+            max = distance
+            a = result[max]!!.first
+            b = result[max]!!.second
+        }
     try {
-        return Segment(numberOne, numberTwo)
+        return Segment(a, b)
     } catch (e: IllegalArgumentException) {
         throw e
     }

@@ -170,9 +170,7 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                 writer.newLine()
             }
             max - line1.length > 0 -> {
-
                 numberOfSpaces = (max - line1.length + counter[line]!! - 1) / (counter[line]!! - 1)
-
                 if ((max - line1.length) % (counter[line]!! - 1) != 0)
                     numberOfOptionalSpaces = (max - line1.length) % (counter[line]!! - 1)
                 else if ((max - line1.length) / (counter[line]!! - 1) < 1)
