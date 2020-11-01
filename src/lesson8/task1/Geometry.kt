@@ -3,10 +3,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.sqrt
+import kotlin.math.*
 
 // Урок 8: простые классы
 // Максимальное количество баллов = 40 (без очень трудных задач = 11)
@@ -165,9 +162,11 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point = Point(
-        (other.b - b) / (sin(angle) - sin(other.angle)),
-        ((other.b - b) / (sin(angle) - sin(other.angle)) + b) / cos(angle)
-    )
+        (other.b * cos(angle) - b * cos(other.angle)) / (sin(angle) * cos(other.angle) - sin(other.angle) * cos(angle)),
+        ((other.b * cos(angle) - b * cos(other.angle)) / (sin(angle) * cos(other.angle) - sin(other.angle) * cos(angle))*sin(angle)+b)/cos(angle),
+
+        )
+
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
@@ -185,7 +184,10 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = Line(s.begin, (s.end.y - s.begin.y) / (s.end.distance(s.begin)) * PI / 2)
+fun lineBySegment(s: Segment): Line = Line(
+    s.begin,
+    abs(s.end.y - s.begin.y) / (s.end.distance(s.begin)) * PI / 2
+)
 
 /**
  * Средняя (3 балла)
