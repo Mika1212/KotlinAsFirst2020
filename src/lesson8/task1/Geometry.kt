@@ -205,19 +205,10 @@ fun bisectorByPoints(a: Point, b: Point): Line {
     val b1 = if (a1 == a) b else a
     val halfPoint = Point((a1.x + b1.x) / 2.0, (a1.y + b1.y) / 2.0)
     var angleWithHorizon = atan((b1.y - a1.y) / (b1.x - a1.x))
-    angleWithHorizon = if (a1.y != b1.y) angleWithHorizon + PI / 2.0 else angleWithHorizon
+    angleWithHorizon =
+        if (angleWithHorizon == PI / 2.0) 0.0 else if (a1.y != b1.y) angleWithHorizon + PI / 2.0 else angleWithHorizon
     return Line(
         halfPoint, angleWithHorizon
-    )
-}
-
-fun main() {
-    println(
-        bisectorByPoints(
-            Point(0.10664549030127568, 0.5717791545338101), Point(
-                0.6310084560120823, -2.220446049250313e-16
-            )
-        )
     )
 }
 
