@@ -3,6 +3,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
+import lesson7.task1.markdownToHtmlLists
 import kotlin.math.*
 
 // Урок 8: простые классы
@@ -186,16 +187,7 @@ class Line(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = Line(
-    s.begin.y * cos(
-        abs(s.end.y - s.begin.y) / s.begin.distance(s.end) * PI / 2 - s.begin.x * sin(
-            (s.end.y - s.begin.y) / s.begin.distance(
-                s.end
-            ) * PI / 2
-        )
-    ),
-    abs(s.end.y - s.begin.y) / s.begin.distance(s.end) * PI / 2
-)
+fun lineBySegment(s: Segment): Line = TODO()
 
 /**
  * Средняя (3 балла)
@@ -209,7 +201,12 @@ fun lineByPoints(a: Point, b: Point): Line = TODO()
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val halfPoint = Point((a.x + b.x) / 2.0, (a.y + b.y) / 2.0)
+    var angleWithSegment = (b.y - a.y) / a.distance(b) * PI / 2.0
+    if (a.y != b.y) angleWithSegment += PI / 2.0
+    return Line(halfPoint.y * cos(angleWithSegment) - halfPoint.x * sin(angleWithSegment), angleWithSegment)
+}
 
 /**
  * Средняя (3 балла)
