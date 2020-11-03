@@ -364,8 +364,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     val read1 = reader.toMutableList()
 
-    for (letter in reader.reversed()) {
-        if (letter == "</p>\n<p>") read1.removeLast()
+    for ((i, letter) in reader.reversed().withIndex()) {
+        if (letter == "</p>\n<p>") read1.removeAt(reader.lastIndex - i)
         if (letter != " ") break
     }
     for (letter in reader) {
