@@ -124,18 +124,24 @@ fun diameter(vararg points: Point): Segment {
         }
     }
     if (i < 2) throw IllegalArgumentException()
-    var (a, b) = Pair(Point(0.0, 0.0), Point(0.0, 0.0))
+    var a = points[0]
+    var b = points[1]
     for ((distance, pair) in result)
         if (distance > max) {
             max = distance
-            a = result[max]!!.first
-            b = result[max]!!.second
+            a = pair.first
+            b = pair.second
         }
-    try {
-        return Segment(a, b)
-    } catch (e: IllegalArgumentException) {
-        throw e
+    println("$a,$b")
+    var markA = false
+    var markB = false
+    for (j in 0..points.size) {
+        if (points[j] == a) markA = true
+        if (points[j] == b) markB = true
+        if (markA) return Segment(a, b) else if (markB) return Segment(b, a)
     }
+    return Segment(a, b)
+
 }
 
 /**
@@ -144,7 +150,11 @@ fun diameter(vararg points: Point): Segment {
  * Построить окружность по её диаметру, заданному двумя точками
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
-fun circleByDiameter(diameter: Segment): Circle = TODO()
+fun circleByDiameter(diameter: Segment): Circle {
+    val (a, b) = diameter
+    val point = Point((a.x + b.x) / 2.0, (a.y + b.y) / 2.0)
+    return Circle(point, point.distance(b))
+}
 
 /**
  * Прямая, заданная точкой point и углом наклона angle (в радианах) по отношению к оси X.
@@ -257,56 +267,5 @@ fun minContainingCircle(vararg points: Point): Circle {
         i++
     if (i == 0) throw IllegalArgumentException()
     if (i == 1) return Circle(points[0], 0.0)
-
-    val (a, b) = diameter(*points)
-    val point = Point((a.x.plus(b.x)).div(2.0), (a.y.plus(b.y)).div(2.0))
-    return Circle(
-        point,
-        if (a.distance(point) > b.distance(point)
-        )
-            a.distance(point)
-        else b.distance(point)
-    )
+    return circleByDiameter(diameter(*points))
 }
-
-/*
-fun main() {
-    println(minContainingCircle(Point(0.0,0.0),Point(2.0,2.0)))
-    println(
-        minContainingCircle(
-            Point(-632.0, 0.3834069071943039),
-            Point(0.6395488476071388, 0.9030139559293151),
-            Point(0.0, 0.3990655050860471),
-            Point(-2.220446049250313e-16, 0.609464135499725),
-            Point(-632.0, 0.0),
-            Point(2.220446049250313e-16, 0.8896597978785196),
-            Point(5e-324, 0.4256252328849518),
-            Point(2.220446049250313e-16, 0.9839450313749777),
-            Point(-2.220446049250313e-16, 0.6411449955762332),
-            Point(2.220446049250313e-16, 0.24844806001633346),
-            Point(-5e-324, -632.0),
-            Point(0.0, 0.0)
-        )
-    )
-}
-*/
-
-/*
-
-    var nearestPoint = points[0]
-    var maxOfAll = MAX_VALUE
-
-    for (point in points) {
-        var max = 0.0
-        for (point1 in points)
-            if (point.distance(point1) > max) max = point.distance(point1)
-        if (max < maxOfAll) {
-            maxOfAll = max
-            nearestPoint = point
-        }
-    }
-    return Circle(
-        nearestPoint, maxOfAll
-    )
-
-*/
