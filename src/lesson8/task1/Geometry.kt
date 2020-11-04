@@ -259,21 +259,50 @@ fun minContainingCircle(vararg points: Point): Circle {
     if (i == 1) return Circle(points[0], 0.0)
 
     val (a, b) = diameter(*points)
-    var nearestPoint = Point(a.x, a.y)
+    println(Point((a.x + b.x) / 2.0, (a.y + b.y) / 2.0))
+    return Circle(
+        Point((a.x + b.x) / 2.0, (a.y + b.y) / 2.0),
+        if (a.distance(Point((a.x + b.x) / 2.0, (a.y + b.y) / 2.0))
+            > b.distance(Point((a.x + b.x) / 2.0, (a.y + b.y) / 2.0))
+        )
+            a.distance(Point((a.x + b.x) / 2.0, (a.y + b.y) / 2.0))
+        else b.distance(
+            Point((a.x + b.x) / 2.0, (a.y + b.y) / 2.0)
+        )
+    )
+
+    var nearestPoint = points[0]
     var maxOfAll = MAX_VALUE
 
     for (point in points) {
         var max = 0.0
         for (point1 in points)
             if (point.distance(point1) > max) max = point.distance(point1)
-        if (max<maxOfAll) {
+        if (max < maxOfAll) {
             maxOfAll = max
             nearestPoint = point
         }
     }
     return Circle(
-        nearestPoint, if (nearestPoint.distance(a) > nearestPoint.distance(b)) nearestPoint.distance(a)
-        else nearestPoint.distance(b)
+        nearestPoint, maxOfAll
     )
 }
 
+fun main() {
+    println(
+        minContainingCircle(
+            Point(-632.0, 0.3834069071943039),
+            Point(0.6395488476071388, 0.9030139559293151),
+            Point(0.0, 0.3990655050860471),
+            Point(-2.220446049250313e-16, 0.609464135499725),
+            Point(-632.0, 0.0),
+            Point(2.220446049250313e-16, 0.8896597978785196),
+            Point(5e-324, 0.4256252328849518),
+            Point(2.220446049250313e-16, 0.9839450313749777),
+            Point(-2.220446049250313e-16, 0.6411449955762332),
+            Point(2.220446049250313e-16, 0.24844806001633346),
+            Point(-5e-324, -632.0),
+            Point(0.0, 0.0)
+        )
+    )
+}
