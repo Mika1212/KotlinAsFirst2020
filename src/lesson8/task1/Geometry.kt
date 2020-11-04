@@ -151,7 +151,7 @@ fun circleByDiameter(diameter: Segment): Circle = TODO()
  * или: y * cos(angle) = x * sin(angle) + b, где b = point.y * cos(angle) - point.x * sin(angle).
  * Угол наклона обязан находиться в диапазоне от 0 (включительно) до PI (исключительно).
  */
-class Line(val b: Double, val angle: Double) {
+class Line private constructor(val b: Double, val angle: Double) {
     init {
         require(angle >= 0 && angle < PI) { "Incorrect line angle: $angle" }
     }
@@ -181,7 +181,7 @@ class Line(val b: Double, val angle: Double) {
         return result
     }
 
-    override fun toString() = "Line(${cos(angle)} * y = ${sin(angle)} * x + $b), $angle"
+    override fun toString() = "Line(${cos(angle)} * y = ${sin(angle)} * x + $b)"
 }
 
 /**
