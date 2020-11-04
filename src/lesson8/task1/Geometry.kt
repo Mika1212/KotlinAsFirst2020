@@ -3,6 +3,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
+import java.lang.Double.MAX_VALUE
 import kotlin.math.*
 
 // Урок 8: простые классы
@@ -258,17 +259,21 @@ fun minContainingCircle(vararg points: Point): Circle {
     if (i == 1) return Circle(points[0], 0.0)
 
     val (a, b) = diameter(*points)
-    val halfX = (a.x + b.x) / 2.0
-    val halfY = (a.y + b.y) / 2.0
-
     var nearestPoint = Point(a.x, a.y)
+    var maxOfAll = MAX_VALUE
+
     for (point in points) {
-        if (abs(halfX - point.x) + abs(halfY - point.y)
-            <= abs(halfX - nearestPoint.x) + abs(halfY - nearestPoint.y))
+        var max = 0.0
+        for (point1 in points)
+            if (point.distance(point1) > max) max = point.distance(point1)
+        if (max<maxOfAll) {
+            maxOfAll = max
             nearestPoint = point
+        }
     }
     return Circle(
         nearestPoint, if (nearestPoint.distance(a) > nearestPoint.distance(b)) nearestPoint.distance(a)
         else nearestPoint.distance(b)
     )
 }
+
