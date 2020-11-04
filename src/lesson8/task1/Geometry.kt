@@ -115,15 +115,15 @@ data class Segment(val begin: Point, val end: Point) {
 fun diameter(vararg points: Point): Segment {
     val result = mutableMapOf<Double, Pair<Point, Point>>()
     var max = 0.0
-    var i = 0
+    val set = mutableSetOf<Point>()
     for (arg in points) {
-        i++
+        set.add(arg)
         for (arg1 in points) {
             result[arg.distance(arg1)] = Pair(arg, arg1)
             max = arg.distance(arg1)
         }
     }
-    if (i < 2) throw IllegalArgumentException()
+    if (set.size<2) throw IllegalArgumentException()
     var a = points[0]
     var b = points[1]
     for ((distance, pair) in result)
@@ -135,9 +135,9 @@ fun diameter(vararg points: Point): Segment {
     println("$a,$b")
     var markA = false
     var markB = false
-    for (j in 0..points.size) {
-        if (points[j] == a) markA = true
-        if (points[j] == b) markB = true
+    for (i in 0..points.size) {
+        if (points[i] == a) markA = true
+        if (points[i] == b) markB = true
         if (markA) return Segment(a, b) else if (markB) return Segment(b, a)
     }
     return Segment(a, b)
