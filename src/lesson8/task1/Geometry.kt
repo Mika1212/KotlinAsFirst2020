@@ -250,5 +250,25 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun minContainingCircle(vararg points: Point): Circle {
+    var i = 0
+    for (point in points)
+        i++
+    if (i == 0) throw IllegalArgumentException()
+    if (i == 1) return Circle(points[0], 0.0)
 
+    val (a, b) = diameter(*points)
+    val halfX = (a.x + b.x) / 2.0
+    val halfY = (a.y + b.y) / 2.0
+
+    var nearestPoint = Point(a.x, a.y)
+    for (point in points) {
+        if (abs(halfX - point.x) + abs(halfY - point.y)
+            <= abs(halfX - nearestPoint.x) + abs(halfY - nearestPoint.y))
+            nearestPoint = point
+    }
+    return Circle(
+        nearestPoint, if (nearestPoint.distance(a) > nearestPoint.distance(b)) nearestPoint.distance(a)
+        else nearestPoint.distance(b)
+    )
+}
