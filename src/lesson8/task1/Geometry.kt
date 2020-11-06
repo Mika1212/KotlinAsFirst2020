@@ -261,9 +261,11 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val center2 = x.crossPoint(y)
     val center3 = y.crossPoint(z)
     val center =
-        if (center1.distance(a1) < center2.distance(a1)) center1
-        else if (center2.distance(a1) < center3.distance(a1)) center2
-        else center3
+        when {
+            center1.distance(a1) < center2.distance(a1) -> center1
+            center2.distance(a1) < center3.distance(a1) -> center2
+            else -> center3
+        }
     return Circle(center, center.distance(a1))
 }
 
