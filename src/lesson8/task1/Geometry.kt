@@ -5,6 +5,7 @@ package lesson8.task1
 import lesson1.task1.sqr
 import lesson4.task1.center
 import java.lang.Double.MAX_VALUE
+import java.text.DecimalFormat
 import kotlin.math.*
 
 // Урок 8: простые классы
@@ -249,10 +250,14 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val x = bisectorByPoints(a, b)
-    val y = bisectorByPoints(b, c)
+    val scale = 10.0.pow(12.0)
+    val a1 = Point(a.x / scale * scale, a.y / scale * scale)
+    val b1 = Point(b.x / scale * scale, b.y / scale * scale)
+    val c1 = Point(c.x / scale * scale, c.y / scale * scale)
+    val x = bisectorByPoints(a1, b1)
+    val y = bisectorByPoints(a1, c1)
     val center = x.crossPoint(y)
-    return Circle(center, maxOf(center.distance(a), center.distance(b), center.distance(c)))
+    return Circle(center, center.distance(a1))
 }
 
 /**
