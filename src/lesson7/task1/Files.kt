@@ -345,7 +345,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var sNumber = 0
     val reader = mutableListOf<String>()
     var mark = 0
-    val actual = File(inputName).readText().replace(Regex("""(\n\s*\n)"""), "☠☠☠☠☠")
+    val actual = File(inputName).readText().replace(Regex("[\\t]"), " ")
+        .replace(Regex("""(\n\s*\n)"""), "☠☠☠☠☠")
         .replace(Regex("[\\t\\n]"), " ")
     loopQ@ for ((i, letter) in actual.withIndex()) {
         if (letter == ' ') {
@@ -376,53 +377,53 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val read = ";" + read1.joinToString(separator = "") + ";"
 
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
-
-    loop@ for ((i, letter) in read.withIndex()) {
-        when {
-            letter == '*' && read[i + 1] != '*' && read[i - 1] != '*' && iNumber % 2 == 0 -> {
-                writer.write("<i>")
-                iNumber++
+    if (read.length > 1)
+        loop@ for ((i, letter) in read.withIndex()) {
+            when {
+                letter == '*' && read[i + 1] != '*' && read[i - 1] != '*' && iNumber % 2 == 0 -> {
+                    writer.write("<i>")
+                    iNumber++
+                }
+                letter == '*' && read[i + 1] != '*' && read[i - 1] != '*' && iNumber % 2 == 1 -> {
+                    writer.write("</i>")
+                    iNumber++
+                }
+                letter == '*' && read[i + 1] == '*' && read[i - 1] != '*' && read[i + 2] != '*' && bNumber % 2 == 0 -> {
+                    writer.write("<b>")
+                    bNumber++
+                }
+                letter == '*' && read[i + 1] == '*' && read[i - 1] != '*' && read[i + 2] != '*' && bNumber % 2 == 1 -> {
+                    writer.write("</b>")
+                    bNumber++
+                }
+                letter == '*' && read[i + 1] == '*' && read[i + 2] == '*' && read[i - 1] != '*' -> {
+                    if (bNumber % 2 == 0 && iNumber % 2 == 0)
+                        writer.write("<b><i>")
+                    if (bNumber % 2 == 1 && iNumber % 2 == 1)
+                        writer.write("</b></i>")
+                    bNumber++
+                    iNumber++
+                }
+                letter == '~' && read[i + 1] == '~' && read[i - 1] != '~' && sNumber % 2 == 0 -> {
+                    writer.write("<s>")
+                    sNumber++
+                }
+                letter == '~' && read[i + 1] == '~' && read[i - 1] != '~' && sNumber % 2 == 1 -> {
+                    writer.write("</s>")
+                    sNumber++
+                }
+                letter == '\\' && read[i + 1] == 't' -> writer.write("\\t")
+                letter == 't' && read[i - 1] == '\\' -> continue@loop
+                letter == '\\' && read[i + 1] == 'n' -> writer.write("\\n")
+                letter == 'n' && read[i - 1] == '\\' -> continue@loop
+                letter == '*' && read[i - 1] == '*' -> continue@loop
+                letter == '*' && read[i - 1] == '*' && read[i - 2] == '*' -> continue@loop
+                letter == '~' && read[i - 1] == '~' -> continue@loop
+                letter == ';' && (i == 0 || i == read.length - 1) -> continue@loop
+                letter == ' ' -> continue@loop
+                else -> writer.write(letter.toString())
             }
-            letter == '*' && read[i + 1] != '*' && read[i - 1] != '*' && iNumber % 2 == 1 -> {
-                writer.write("</i>")
-                iNumber++
-            }
-            letter == '*' && read[i + 1] == '*' && read[i - 1] != '*' && read[i + 2] != '*' && bNumber % 2 == 0 -> {
-                writer.write("<b>")
-                bNumber++
-            }
-            letter == '*' && read[i + 1] == '*' && read[i - 1] != '*' && read[i + 2] != '*' && bNumber % 2 == 1 -> {
-                writer.write("</b>")
-                bNumber++
-            }
-            letter == '*' && read[i + 1] == '*' && read[i + 2] == '*' && read[i - 1] != '*' -> {
-                if (bNumber % 2 == 0 && iNumber % 2 == 0)
-                    writer.write("<b><i>")
-                if (bNumber % 2 == 1 && iNumber % 2 == 1)
-                    writer.write("</b></i>")
-                bNumber++
-                iNumber++
-            }
-            letter == '~' && read[i + 1] == '~' && read[i - 1] != '~' && sNumber % 2 == 0 -> {
-                writer.write("<s>")
-                sNumber++
-            }
-            letter == '~' && read[i + 1] == '~' && read[i - 1] != '~' && sNumber % 2 == 1 -> {
-                writer.write("</s>")
-                sNumber++
-            }
-            letter == '\\' && read[i + 1] == 't' -> writer.write("\\t")
-            letter == 't' && read[i - 1] == '\\' -> continue@loop
-            letter == '\\' && read[i + 1] == 'n' -> writer.write("\\n")
-            letter == 'n' && read[i - 1] == '\\' -> continue@loop
-            letter == '*' && read[i - 1] == '*' -> continue@loop
-            letter == '*' && read[i - 1] == '*' && read[i - 2] == '*' -> continue@loop
-            letter == '~' && read[i - 1] == '~' -> continue@loop
-            letter == ';' && (i == 0 || i == read.length - 1) -> continue@loop
-            letter == ' ' -> continue@loop
-            else -> writer.write(letter.toString())
         }
-    }
     writer.write("</p>\n" + "</body>\n" + "</html>\n")
     writer.close()
 }
