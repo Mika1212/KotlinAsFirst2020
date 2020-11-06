@@ -3,6 +3,7 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
+import lesson4.task1.center
 import java.lang.Double.MAX_VALUE
 import kotlin.math.*
 
@@ -91,7 +92,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = TODO()
+    fun contains(p: Point): Boolean = radius >= p.distance(center)
 }
 
 /**
@@ -123,7 +124,7 @@ fun diameter(vararg points: Point): Segment {
             max = arg.distance(arg1)
         }
     }
-    if (set.size<2) throw IllegalArgumentException()
+    if (set.size < 2) throw IllegalArgumentException()
     var a = points[0]
     var b = points[1]
     for ((distance, pair) in result)
@@ -176,10 +177,10 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point = Point(
-        (other.b * cos(angle) - b * cos(other.angle)) / (sin(angle) * cos(other.angle) - sin(other.angle) * cos(angle)),
-        ((other.b * cos(angle) - b * cos(other.angle)) / (sin(angle) * cos(other.angle) - sin(other.angle) * cos(angle)) * sin(
-            angle
-        ) + b) / cos(angle)
+        (other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle),
+        ((other.b * cos(angle) - b * cos(other.angle)) / sin(angle - other.angle) * sin(other.angle) + other.b) / cos(
+            other.angle
+        )
     )
 
 
@@ -247,7 +248,12 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val x = bisectorByPoints(a, b)
+    val y = bisectorByPoints(b, c)
+    val center = x.crossPoint(y)
+    return Circle(center, maxOf(center.distance(a), center.distance(b), center.distance(c)))
+}
 
 /**
  * Очень сложная (10 баллов)
@@ -266,5 +272,24 @@ fun minContainingCircle(vararg points: Point): Circle {
         i++
     if (i == 0) throw IllegalArgumentException()
     if (i == 1) return Circle(points[0], 0.0)
-    return circleByDiameter(diameter(*points))
+
+    val circle = circleByDiameter(diameter(*points))
+    println(circle)
+    var pointChange = points[0]
+    var center = Point(circle.center.x, circle.center.y)
+    var radius = circle.radius
+    while (true) {
+        val circle1 = Circle(center, radius)
+        val pointCheck = pointChange
+        for (point in points)
+            if (!circle1.contains(point)) {
+                pointChange = point
+                println(point)
+                center = Point((circle1.center.x + point.x) / 2.0, (circle.center.y + point.y) / 2.0)
+                radius = point.distance(circle1.center)
+                break
+            }
+        println(circle1)
+        if (pointChange == pointCheck) return Circle(center, radius)
+    }
 }
