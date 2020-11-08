@@ -39,9 +39,9 @@ data class HexPoint(val x: Int, val y: Int) {
     fun distance(other: HexPoint): Int {
         var currentX = x
         var currentY = y
-        var distance = 0
+        var result = 0
         while (true) {
-            distance += 1
+            result += 1
             when {
                 currentY < other.y -> {
                     when {
@@ -82,7 +82,7 @@ data class HexPoint(val x: Int, val y: Int) {
             }
             if (currentX == other.x && currentY == other.y) break
         }
-        return distance
+        return result
     }
 
     override fun toString(): String = "$y.$x"
