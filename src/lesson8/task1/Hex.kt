@@ -40,7 +40,7 @@ data class HexPoint(val x: Int, val y: Int) {
      */
     fun distance(other: HexPoint): Int =
         if (abs(x - other.x) > abs(y - other.y)) abs(x - other.x)
-        else abs(y - other.y) + 1
+        else abs(y - other.y) + abs(x - other.x)
 
     override fun toString(): String = "$y.$x"
 }
