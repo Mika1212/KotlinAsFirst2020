@@ -39,7 +39,7 @@ data class HexPoint(val x: Int, val y: Int) {
      * Например, путь межу гексами 16 и 41 (см. выше) может проходить через 25, 34, 43 и 42 и имеет длину 5.
      */
     fun distance(other: HexPoint): Int =
-        if (y < 0 || x < 0 || other.x < 0 || other.y < 0) abs(x - other.x) + abs(y - other.y)
+        if ((other.x < 0 || x < 0) && (other.y < 0 || y < 0)) abs(x - other.x) + abs(y - other.y)
         else if (abs(x - other.x) > abs(y - other.y))
             abs(x - other.x)
         else abs(y - other.y)
