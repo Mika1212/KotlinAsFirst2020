@@ -66,9 +66,11 @@ data class Hexagon(val center: HexPoint, val radius: Int) {
      * и другим шестиугольником B с центром в 26 и радиуоом 2 равно 2
      * (расстояние между точками 32 и 24)
      */
-    fun distance(other: Hexagon): Int {
-        TODO()
-    }
+    fun distance(other: Hexagon): Int =
+        if (center.distance(other.center) - radius - other.radius > 0)
+            center.distance(other.center) - radius - other.radius
+        else 0
+
 
     /**
      * Тривиальная (1 балл)
