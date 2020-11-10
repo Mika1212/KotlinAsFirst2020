@@ -77,11 +77,15 @@ data class Hexagon(val center: HexPoint, val radius: Int) {
      *
      * Вернуть true, если заданная точка находится внутри или на границе шестиугольника
      */
-    fun contains(point: HexPoint): Boolean = TODO()
+    fun contains(point: HexPoint): Boolean = center.distance(point) <= radius
 }
 
 /**
  * Прямолинейный отрезок между двумя гексами
+
+ **
+ * Точка (гекс) на шестиугольной сетке.
+ * Координаты заданы как в примере (первая цифра - y, вторая цифра - x)
  */
 class HexSegment(val begin: HexPoint, val end: HexPoint) {
     /**
@@ -92,7 +96,12 @@ class HexSegment(val begin: HexPoint, val end: HexPoint) {
      * Такими являются, например, отрезок 30-34 (горизонталь), 13-63 (прямая диагональ) или 51-24 (косая диагональ).
      * А, например, 13-26 не является "правильным" отрезком.
      */
-    fun isValid(): Boolean = TODO()
+    fun isValid(): Boolean {
+        if (begin.y == end.y) return true
+        if (begin.x == end.x) return true
+        if (abs(begin.x - end.x) == abs(begin.y - end.y)) return true
+        return false
+    }
 
     /**
      * Средняя (3 балла)
