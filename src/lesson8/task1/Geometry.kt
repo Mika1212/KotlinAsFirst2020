@@ -216,23 +216,7 @@ fun lineByPoints(a: Point, b: Point): Line = TODO()
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line {
-    val scale = 10.0.pow(14.0)
-    val a1 = if (a.x <= b.x) Point(a.x / scale * scale, a.y / scale * scale) else Point(
-        b.x / scale * scale,
-        b.y / scale * scale
-    )
-    val b1 = if (a1 == a) Point(b.x / scale * scale, b.y / scale * scale) else Point(
-        a.x / scale * scale,
-        a.y / scale * scale
-    )
-    val halfPoint = Point((a1.x + b1.x) / 2.0, (a1.y + b1.y) / 2.0)
-    var angleWithHorizon = if (a1.y == b1.y) PI / 2.0 else atan((b1.y - a1.y) / (b1.x - a1.x)) + PI / 2
-    if (angleWithHorizon == PI) angleWithHorizon = 0.0
-    return Line(
-        halfPoint, angleWithHorizon
-    )
-}
+fun bisectorByPoints(a: Point, b: Point): Line = TODO()
 
 /**
  * Средняя (3 балла)
@@ -257,78 +241,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val scale = 10.0.pow(14.0)
-    val a1 = Point(a.x / scale * scale, a.y / scale * scale)
-    val b1 = Point(b.x / scale * scale, b.y / scale * scale)
-    val c1 = Point(c.x / scale * scale, c.y / scale * scale)
-    val x = bisectorByPoints(a1, b1)
-    val y = bisectorByPoints(b1, c1)
-    val z = bisectorByPoints(a1, c1)
-    val center = x.crossPoint(y)
-    return Circle(center, center.distance(a1))
-}
-
-/*
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val scale = 10.0.pow(14.0)
-    val a1 = Point(a.x / scale * scale, a.y / scale * scale)
-    val b1 = Point(b.x / scale * scale, b.y / scale * scale)
-    val c1 = Point(c.x / scale * scale, c.y / scale * scale)
-    val x = bisectorByPoints(a1, b1)
-    val y = bisectorByPoints(b1, c1)
-    val z = bisectorByPoints(a1, c1)
-    println("$x$y$z")
-    println("${x.crossPoint(y)} ${x.crossPoint(z)} ${y.crossPoint(z)}")
-    val helpList = mutableListOf(x.crossPoint(y), x.crossPoint(z), y.crossPoint(z))
-    var center = Point(0.0, 0.0)
-    for (point in helpList)
-        if (point.distance(a1) == point.distance(b1) || point.distance(a1) == point.distance(c1)) {
-            center = point
-        }
-    center = x.crossPoint(y)
-    return Circle(center, center.distance(a1))
-}
-*/
-
-fun main() {
-    println(circleByThreePoints(Point(0.0, 0.0), Point(1.0, 1.0), Point(2.0, 0.0)))
-    println("\n")
-    println(
-        circleByThreePoints(
-            Point(-632.0, -632.0), Point(-632.0, 0.2604441790708444),
-            Point(-5e-324, -632.0)
-        )
-    )
-    println("\n")
-    println(
-        circleByThreePoints(
-            Point(-632.0, -632.0), Point(-2.220446049250313e-16, -2.220446049250313e-16),
-            Point(0.3570298429170591, -632.0)
-        )
-    )
-    println("\n")
-    println(
-        circleByThreePoints(
-            Point(-632.0, 5e-324), Point(0.0, -632.0),
-            Point(0.4117949642884631, 0.0)
-        )
-    )
-    println("\n")
-    println(
-        circleByThreePoints(
-            Point(-632.0, -632.0), Point(-2.220446049250313e-16, -2.220446049250313e-16),
-            Point(0.3570298429170591, -632.0)
-        )
-    )
-    println("\n")
-    println(
-        circleByThreePoints(
-            Point(2.220446049250313e-16, -2.220446049250313e-16), Point(-632.0, -632.0),
-            Point(2.220446049250313e-16, -632.0)
-        )
-    )
-}
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
 
 /**
  * Очень сложная (10 баллов)
@@ -341,30 +254,4 @@ fun main() {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle {
-    var i = 0
-    for (point in points)
-        i++
-    if (i == 0) throw IllegalArgumentException()
-    if (i == 1) return Circle(points[0], 0.0)
-
-    val circle = circleByDiameter(diameter(*points))
-    println(circle)
-    var pointChange = points[0]
-    var center = Point(circle.center.x, circle.center.y)
-    var radius = circle.radius
-    while (true) {
-        val circle1 = Circle(center, radius)
-        val pointCheck = pointChange
-        for (point in points)
-            if (!circle1.contains(point)) {
-                pointChange = point
-                println(point)
-                center = Point((circle1.center.x + point.x) / 2.0, (circle.center.y + point.y) / 2.0)
-                radius = point.distance(circle1.center)
-                break
-            }
-        println(circle1)
-        if (pointChange == pointCheck) return Circle(center, radius)
-    }
-}
+fun minContainingCircle(vararg points: Point): Circle = TODO()
