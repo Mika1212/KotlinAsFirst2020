@@ -377,7 +377,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val read = ";" + read1.joinToString(separator = "") + ";"
 
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
-    if (read.length > 1)
+    if (read.length > 2)
         loop@ for ((i, letter) in read.withIndex()) {
             when {
                 letter == '*' && read[i + 1] != '*' && read[i - 1] != '*' && iNumber % 2 == 0 -> {
