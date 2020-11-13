@@ -97,8 +97,8 @@ class HexSegment(val begin: HexPoint, val end: HexPoint) {
      * А, например, 13-26 не является "правильным" отрезком.
      */
     fun isValid(): Boolean {
-        if (begin.y == end.y) return true
-        if (begin.x == end.x) return true
+        if (begin.y == end.y && begin.x != end.x) return true
+        if (begin.x == end.x && begin.y != end.y) return true
         if (abs(begin.x - end.x) == abs(begin.y - end.y) && begin.y > end.y)
             return true
         return false
@@ -111,18 +111,7 @@ class HexSegment(val begin: HexPoint, val end: HexPoint) {
      * Для "правильного" отрезка выбирается одно из первых шести направлений,
      * для "неправильного" -- INCORRECT.
      */
-    fun direction(): Direction {
-        if (begin.y == end.y)
-            return if (begin.x >= end.x) Direction.LEFT
-            else Direction.RIGHT
-        if (begin.y > end.y)
-            return if (begin.x >= end.x) Direction.DOWN_LEFT
-            else Direction.DOWN_RIGHT
-        if (begin.y < end.y)
-            return if (begin.x > end.x) Direction.UP_LEFT
-            else Direction.UP_RIGHT
-        return Direction.INCORRECT
-    }
+    fun direction(): Direction = TODO()
 
     override fun equals(other: Any?) =
         other is HexSegment && (begin == other.begin && end == other.end || end == other.begin && begin == other.end)
@@ -207,7 +196,9 @@ fun HexPoint.move(direction: Direction, distance: Int): HexPoint = TODO()
  *       HexPoint(y = 5, x = 3)
  *     )
  */
-fun pathBetweenHexes(from: HexPoint, to: HexPoint): List<HexPoint> = TODO()
+fun pathBetweenHexes(from: HexPoint, to: HexPoint): List<HexPoint> {
+    TODO()
+}
 
 /**
  * Очень сложная (20 баллов)
