@@ -125,18 +125,14 @@ fun dateDigitToStr(digital: String): String {
             "ноября",
             "декабря"
         )
+
         if (a.size != 3) return ""
         val result = mutableListOf<String>()
-        for (i in 1..12) {
-            if (a[1].toInt() > 12) return ""
-            if (a[1].toInt() == i) {
-                if (daysInMonth(i, a[2].toInt()) < a[0].toInt()) return ""
+        if (a[1].toInt() > 12) return ""
+        if (daysInMonth(a[1].toInt(), a[2].toInt()) < a[0].toInt()) return ""
 
-            }
-        }
-
-        result.add(a[0])
-        if (result[0].toInt() < 10) result[0] = result[0].toInt().toString()
+        if (a[0].toInt() < 10) result.add(a[0].toInt().toString())
+        else result.add(a[0])
         if (a[1].toInt() < 1) return ""
         else
             result.add(namesOfMonths[a[1].toInt() - 1])
