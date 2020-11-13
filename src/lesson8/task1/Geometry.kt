@@ -209,7 +209,11 @@ fun lineBySegment(s: Segment): Line = TODO()
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = Line(a, (atan(abs(a.y - b.y) / abs(a.x - b.x))))
+fun lineByPoints(a: Point, b: Point): Line {
+    var angle = atan((a.y - b.y) / (a.x - b.x))
+    if (angle < 0) angle += PI
+    return Line(a, angle)
+}
 
 /**
  * Сложная (5 баллов)
