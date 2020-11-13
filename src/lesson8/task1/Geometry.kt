@@ -212,6 +212,7 @@ fun lineBySegment(s: Segment): Line = TODO()
 fun lineByPoints(a: Point, b: Point): Line {
     var angle = atan((a.y - b.y) / (a.x - b.x))
     if (angle < 0) angle += PI
+    if (angle == PI) angle = 0.0
     return Line(a, angle)
 }
 
