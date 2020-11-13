@@ -209,14 +209,19 @@ fun lineBySegment(s: Segment): Line = TODO()
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line = Line(a, abs(atan((a.y - b.y) / (a.x - b.x))))
 
 /**
  * Сложная (5 баллов)
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val halfX = (a.x + b.x) / 2.0
+    val halfY = (a.y + b.y) / 2.0
+    val line = 0
+    return Line(a, 0.0)
+}
 
 /**
  * Средняя (3 балла)
