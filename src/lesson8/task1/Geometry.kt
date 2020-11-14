@@ -293,14 +293,15 @@ fun minContainingCircle(vararg points: Point): Circle {
     val sum = minX.second + minY.second + maxX.second + maxY.second
     val list = mutableListOf(maxX, maxY, minX, minY).filter { it.second != 0 }
     println(list)
+    println(sum)
     when (sum) {
         1 -> return Circle(list[0].first, 0.0)
         2 -> return circleByDiameter(Segment(list[0].first, list[1].first))
         3 -> return circleByThreePoints(list[0].first, list[1].first, list[2].first)
     }
     val center = if (maxX.first.distance(minX.first) > maxY.first.distance(minY.first))
-        Point((maxX.first.x + minX.first.x) / 2.0, (maxX.first.y + minX.first.y) / 2.0)
-    else Point((maxY.first.x + minY.first.x) / 2.0, (maxY.first.y + minY.first.y) / 2.0)
+        Point((maxX.first.x + minX.first.x) * 0.5, (maxX.first.y + minX.first.y) * 0.5)
+    else Point((maxY.first.x + minY.first.x) * 0.5, (maxY.first.y + minY.first.y) * 0.5)
     val a = Circle(
         center, if (center.distance(maxX.first) > center.distance(maxY.first)) center.distance(maxX.first)
         else center.distance(maxY.first)
