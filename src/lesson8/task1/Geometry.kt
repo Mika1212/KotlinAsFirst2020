@@ -3,6 +3,10 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
+import lesson2.task2.pointInsideCircle
+import lesson4.task1.center
+import java.lang.Double.MAX_VALUE
+import java.text.DecimalFormat
 import kotlin.math.*
 
 // Урок 8: простые классы
@@ -253,9 +257,28 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val a1 = Point(a.x / scale * scale, a.y / scale * scale)
     val b1 = Point(b.x / scale * scale, b.y / scale * scale)
     val c1 = Point(c.x / scale * scale, c.y / scale * scale)
-    return Circle(
-        bisectorByPoints(a1, b1).crossPoint(bisectorByPoints(b1, c1)),
-        bisectorByPoints(a1, b1).crossPoint(bisectorByPoints(b1, c1)).distance(a1)
+    println(a1)
+    println(b1)
+    println(c1)
+    println((bisectorByPoints(c1, b1)))
+    println((bisectorByPoints(a1, b1)))
+    println((bisectorByPoints(c1, a1)))
+
+    val res = Circle(
+        bisectorByPoints(a1, b1).crossPoint(bisectorByPoints(a1, c1)),
+        bisectorByPoints(a1, b1).crossPoint(bisectorByPoints(a1, c1)).distance(a1)
+    )
+    println(res)
+    return res
+}
+
+fun main() {
+    println(
+        circleByThreePoints(
+            Point(2.220446049250313e-16, -632.0),
+            Point(0.6727710698851809, 5e-324),
+            Point(-632.0, 2.220446049250313e-16)
+        )
     )
 }
 
