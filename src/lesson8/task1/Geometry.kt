@@ -272,4 +272,35 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun minContainingCircle(vararg points: Point): Circle {
+    if (points.isEmpty()) throw java.lang.IllegalArgumentException()
+    var maxX = Pair(Point(Double.MIN_VALUE, Double.MIN_VALUE), 0)
+    var maxY = Pair(Point(Double.MAX_VALUE, Double.MAX_VALUE), 0)
+    var minX = Pair(Point(Double.MIN_VALUE, Double.MIN_VALUE), 0)
+    var minY = Pair(Point(Double.MAX_VALUE, Double.MAX_VALUE), 0)
+    for (point in points) {
+        when {
+            point.x > maxX.first.x -> maxX = Pair(point, 1)
+            point.x < minX.first.x -> minX = Pair(point, 1)
+            point.y > maxY.first.y -> maxY = Pair(point, 1)
+            point.y < minY.first.y -> minY = Pair(point, 1)
+        }
+    }
+    val sum = minX.second + minY.second + maxX.second + maxY.second
+    val list = mutableListOf(maxX, maxY, minX, minY).filter { it.second != 0 }
+    println(list)
+    when (sum) {
+        1 -> return Circle(list[0].first, 0.0)
+        2 -> return circleByDiameter(Segment(list[0].first, list[1].first))
+        3 -> return circleByThreePoints(list[0].first, list[1].first, list[2].first)
+    }
+    val center = if (maxX.first.distance(minX.first) > maxY.first.distance(minY.first))
+        Point((maxX.first.x + minX.first.x) / 2.0, (maxX.first.y + minX.first.y) / 2.0)
+    else Point((maxY.first.x + minY.first.x) / 2.0, (maxY.first.y + minY.first.y) / 2.0)
+    val a = Circle(
+        center, if (center.distance(maxX.first) > center.distance(maxY.first)) center.distance(maxX.first)
+        else center.distance(maxY.first)
+    )
+    println(a)
+    return a
+}
