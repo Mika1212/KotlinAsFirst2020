@@ -168,13 +168,7 @@ fun times(a: List<Int>, b: List<Int>): Int {
  * Коэффициенты многочлена заданы списком p: (p0, p1, p2, p3, ..., pN).
  * Значение пустого многочлена равно 0 при любом x.
  */
-fun polynom(p: List<Int>, x: Int): Int {
-    var b = 1
-    return p.fold(0) { previousResult, element ->
-        if (b != 1 || previousResult != 0) b *= x
-        previousResult + element * b
-    }
-}
+fun polynom(p: List<Int>, x: Int): Int = TODO()
 
 /**
  * Средняя
