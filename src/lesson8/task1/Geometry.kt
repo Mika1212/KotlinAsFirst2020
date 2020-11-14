@@ -303,33 +303,34 @@ fun minContainingCircle(vararg points: Point): Circle {
             }
         }
     }
-    var marker = dropped.size
-    while (marker == dropped.size) {
-        marker = dropped.size
-        val dropped1 = dropped.toMutableSet()
-        for (point in dropped1) {
-            when {
-                point.x > maxX.first.x -> {
-                    if (maxX.second > 0) dropped.add(maxX.first)
-                    dropped.remove(point)
-                    maxX = Pair(point, 1)
-                }
-                point.x < minX.first.x -> {
-                    if (maxX.second > 0) dropped.add(maxX.first)
-                    dropped.remove(point)
-                    minX = Pair(point, 1)
-                }
-                point.y > maxY.first.y -> {
-                    if (maxX.second > 0) dropped.add(maxX.first)
-                    dropped.remove(point)
-                    maxY = Pair(point, 1)
-                }
-                point.y < minY.first.y -> {
-                    if (maxX.second > 0) dropped.add(maxX.first)
-                    dropped.remove(point)
-                    minY = Pair(point, 1)
+    if (dropped.isNotEmpty()) {
+        while (true) {
+            val dropped1 = dropped.toMutableSet()
+            for (point in dropped1) {
+                when {
+                    point.x > maxX.first.x -> {
+                        if (maxX.second > 0) dropped.add(maxX.first)
+                        dropped.remove(point)
+                        maxX = Pair(point, 1)
+                    }
+                    point.x < minX.first.x -> {
+                        if (maxX.second > 0) dropped.add(maxX.first)
+                        dropped.remove(point)
+                        minX = Pair(point, 1)
+                    }
+                    point.y > maxY.first.y -> {
+                        if (maxX.second > 0) dropped.add(maxX.first)
+                        dropped.remove(point)
+                        maxY = Pair(point, 1)
+                    }
+                    point.y < minY.first.y -> {
+                        if (maxX.second > 0) dropped.add(maxX.first)
+                        dropped.remove(point)
+                        minY = Pair(point, 1)
+                    }
                 }
             }
+            if (dropped == dropped1) break
         }
     }
 
