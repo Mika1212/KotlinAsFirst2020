@@ -294,9 +294,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     val sum = list.size
     println(list)
     println(sum)
-    println(circleByThreePoints(list[0].first, list[1].first, list[2].first))
-    println("Circle(center=Point(x=-0.42307692307692313, y=1.0384615384615388), radius=3.984065896178019)\n")
-    when (sum) {
+   when (sum) {
         1 -> return Circle(list[0].first, 0.0)
         2 -> return circleByDiameter(Segment(list[0].first, list[1].first))
         3 -> return circleByThreePoints(list[0].first, list[1].first, list[2].first)
