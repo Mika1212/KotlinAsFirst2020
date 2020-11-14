@@ -282,14 +282,57 @@ fun minContainingCircle(vararg points: Point): Circle {
     var maxY = Pair(Point(Double.MIN_VALUE, Double.MIN_VALUE), 0)
     var minX = Pair(Point(Double.MAX_VALUE, Double.MAX_VALUE), 0)
     var minY = Pair(Point(Double.MAX_VALUE, Double.MAX_VALUE), 0)
+    val dropped = mutableSetOf<Point>()
     for (point in points1) {
         when {
-            point.x > maxX.first.x -> maxX = Pair(point, 1)
-            point.x < minX.first.x -> minX = Pair(point, 2)
-            point.y > maxY.first.y -> maxY = Pair(point, 3)
-            point.y < minY.first.y -> minY = Pair(point, 4)
+            point.x > maxX.first.x -> {
+                if (maxX.second > 0) dropped.add(maxX.first)
+                maxX = Pair(point, 1)
+            }
+            point.x < minX.first.x -> {
+                if (maxX.second > 0) dropped.add(maxX.first)
+                minX = Pair(point, 1)
+            }
+            point.y > maxY.first.y -> {
+                if (maxX.second > 0) dropped.add(maxX.first)
+                maxY = Pair(point, 1)
+            }
+            point.y < minY.first.y -> {
+                if (maxX.second > 0) dropped.add(maxX.first)
+                minY = Pair(point, 1)
+            }
         }
     }
+    var marker = dropped.size
+    while (marker == dropped.size) {
+        marker = dropped.size
+        val dropped1 = dropped.toMutableSet()
+        for (point in dropped1) {
+            when {
+                point.x > maxX.first.x -> {
+                    if (maxX.second > 0) dropped.add(maxX.first)
+                    dropped.remove(point)
+                    maxX = Pair(point, 1)
+                }
+                point.x < minX.first.x -> {
+                    if (maxX.second > 0) dropped.add(maxX.first)
+                    dropped.remove(point)
+                    minX = Pair(point, 1)
+                }
+                point.y > maxY.first.y -> {
+                    if (maxX.second > 0) dropped.add(maxX.first)
+                    dropped.remove(point)
+                    maxY = Pair(point, 1)
+                }
+                point.y < minY.first.y -> {
+                    if (maxX.second > 0) dropped.add(maxX.first)
+                    dropped.remove(point)
+                    minY = Pair(point, 1)
+                }
+            }
+        }
+    }
+
     val list = mutableSetOf(maxX, minX, maxY, minY).filter { it.second > 0 }
     val sum = list.size
     println(list)
@@ -309,3 +352,4 @@ fun minContainingCircle(vararg points: Point): Circle {
     println(a)
     return a
 }
+
