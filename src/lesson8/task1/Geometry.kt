@@ -289,15 +289,15 @@ fun minContainingCircle(vararg points: Point): Circle {
                 maxX = Pair(point, 1)
             }
             point.x < minX.first.x -> {
-                if (maxX.second > 0) dropped.add(maxX.first)
+                if (minX.second > 0) dropped.add(minX.first)
                 minX = Pair(point, 1)
             }
             point.y > maxY.first.y -> {
-                if (maxX.second > 0) dropped.add(maxX.first)
+                if (maxY.second > 0) dropped.add(maxY.first)
                 maxY = Pair(point, 1)
             }
             point.y < minY.first.y -> {
-                if (maxX.second > 0) dropped.add(maxX.first)
+                if (minY.second > 0) dropped.add(minY.first)
                 minY = Pair(point, 1)
             }
         }
