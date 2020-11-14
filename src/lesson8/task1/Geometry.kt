@@ -251,7 +251,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val scale = 10.0.pow(10.0)
+    val scale = 10.0.pow(12.0)
     val a1 = Point(a.x / scale * scale, a.y / scale * scale)
     val b1 = Point(b.x / scale * scale, b.y / scale * scale)
     val c1 = Point(c.x / scale * scale, c.y / scale * scale)
@@ -274,7 +274,7 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  */
 fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty()) throw java.lang.IllegalArgumentException()
-    val scale = 10.0.pow(14.0)
+    val scale = 10.0.pow(12.0)
     val points1 = mutableListOf<Point>()
     for ((x, y) in points)
         points1.add(Point(x / scale * scale, y / scale * scale))
@@ -290,18 +290,12 @@ fun minContainingCircle(vararg points: Point): Circle {
             point.y < minY.first.y -> minY = Pair(point, 1)
         }
     }
-    for (point in points1) {
-        when {
-            point.x > maxX.first.x -> maxX = Pair(point, 1)
-            point.x < minX.first.x -> minX = Pair(point, 1)
-            point.y > maxY.first.y -> maxY = Pair(point, 1)
-            point.y < minY.first.y -> minY = Pair(point, 1)
-        }
-    }
     val list = mutableSetOf(maxX, maxY, minX, minY).filter { it.second != 0 }
     val sum = list.size
     println(list)
     println(sum)
+    println(circleByThreePoints(list[0].first, list[1].first, list[2].first))
+    println("Circle(center=Point(x=-0.42307692307692313, y=1.0384615384615388), radius=3.984065896178019)\n")
     when (sum) {
         1 -> return Circle(list[0].first, 0.0)
         2 -> return circleByDiameter(Segment(list[0].first, list[1].first))
