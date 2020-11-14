@@ -255,39 +255,9 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val a1 = Point(a.x / scale * scale, a.y / scale * scale)
     val b1 = Point(b.x / scale * scale, b.y / scale * scale)
     val c1 = Point(c.x / scale * scale, c.y / scale * scale)
-    println(a1)
-    println(b1)
-    println(c1)
-    println((bisectorByPoints(c1, b1)))
-    println((bisectorByPoints(a1, b1)))
-    println((bisectorByPoints(c1, a1)))
-    println(bisectorByPoints(a1, b1).crossPoint(bisectorByPoints(a1, c1)))
-    println(bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(a1, c1)))
-    println(bisectorByPoints(b1, c1).crossPoint(bisectorByPoints(c1, a1)))
-    val res = Circle(
+    return Circle(
         bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(b1, a1)),
         bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(b1, a1)).distance(a1)
-    )
-    println(res)
-    println(bisectorByPoints(a1, b1).crossPoint(bisectorByPoints(b1, c1)))
-    println(bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(b1, a1)))
-    return res
-}
-
-fun main() {
-    println(
-        circleByThreePoints(
-            Point(2.220446049250313e-16, -632.0),
-            Point(0.6727710698851809, 5e-324),
-            Point(-632.0, 2.220446049250313e-16)
-        )
-    )
-    println(
-        circleByThreePoints(
-            Point(-5e-324, 5e-324),
-            Point(-632.0, -632.0),
-            Point(-632.0, 0.0)
-        )
     )
 }
 
