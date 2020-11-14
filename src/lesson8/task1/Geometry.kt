@@ -276,14 +276,13 @@ fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty()) throw java.lang.IllegalArgumentException()
     val scale = 10.0.pow(12.0)
     val points1 = mutableListOf<Point>()
-    for ((x, y) in points)
-        points1.add(Point(x / scale * scale, y / scale * scale))
+
     var maxX = Pair(Point(Double.MIN_VALUE, Double.MIN_VALUE), 0)
     var maxY = Pair(Point(Double.MIN_VALUE, Double.MIN_VALUE), 0)
     var minX = Pair(Point(Double.MAX_VALUE, Double.MAX_VALUE), 0)
     var minY = Pair(Point(Double.MAX_VALUE, Double.MAX_VALUE), 0)
     val dropped = mutableSetOf<Point>()
-    for (point in points1) {
+    for (point in points) {
         when {
             point.x > maxX.first.x -> {
                 if (maxX.second > 0) dropped.add(maxX.first)
