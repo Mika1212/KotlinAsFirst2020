@@ -3,10 +3,6 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import lesson2.task2.pointInsideCircle
-import lesson4.task1.center
-import java.lang.Double.MAX_VALUE
-import java.text.DecimalFormat
 import kotlin.math.*
 
 // Урок 8: простые классы
@@ -252,11 +248,16 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle =
-    Circle(
-        bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)),
-        bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c)).distance(a)
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val scale = 10.0.pow(12.0)
+    val a1 = Point(a.x / scale * scale, a.y / scale * scale)
+    val b1 = Point(b.x / scale * scale, b.y / scale * scale)
+    val c1 = Point(c.x / scale * scale, c.y / scale * scale)
+    return Circle(
+        bisectorByPoints(a1, b1).crossPoint(bisectorByPoints(b1, c1)),
+        bisectorByPoints(a1, b1).crossPoint(bisectorByPoints(b1, c1)).distance(a1)
     )
+}
 
 /**
  * Очень сложная (10 баллов)
