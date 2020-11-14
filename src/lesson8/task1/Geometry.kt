@@ -285,12 +285,12 @@ fun minContainingCircle(vararg points: Point): Circle {
     for (point in points1) {
         when {
             point.x > maxX.first.x -> maxX = Pair(point, 1)
-            point.x < minX.first.x -> minX = Pair(point, 1)
-            point.y > maxY.first.y -> maxY = Pair(point, 1)
-            point.y < minY.first.y -> minY = Pair(point, 1)
+            point.x < minX.first.x -> minX = Pair(point, 2)
+            point.y > maxY.first.y -> maxY = Pair(point, 3)
+            point.y < minY.first.y -> minY = Pair(point, 4)
         }
     }
-    val list = mutableSetOf(maxX, maxY, minX, minY).filter { it.second != 0 }
+    val list = mutableSetOf(maxX, minX, maxY, minY).filter { it.second > 0 }
     val sum = list.size
     println(list)
     println(sum)
