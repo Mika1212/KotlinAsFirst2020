@@ -288,14 +288,13 @@ fun minContainingCircle(vararg points: Point): Circle {
     }
 
     circle1 = circleByDiameter(diameter(*points))
-
     for (point in points)
         if (!circle1.contains(point)) mark = false
-
     if (mark) circle = circle1
+
     for (i in 0..points1.size - 3) {
-        for (j in i+1..points1.size - 2) {
-            loop1@ for (l in j+1..points1.size - 1) {
+        for (j in i + 1..points1.size - 2) {
+            loop1@ for (l in j + 1..points1.size - 1) {
                 if (points1[i] == points1[j] || points1[i] == points1[l] || points1[j] == points1[l]) continue@loop1
                 if (points1[i].x == points1[j].x && points1[j].x == points1[l].x ||
                     points1[i].y == points1[j].y && points1[j].y == points1[l].y
