@@ -286,23 +286,23 @@ fun minContainingCircle(vararg points: Point): Circle {
         if (abs(y1) == 0.0) y1 = 0.0
         points1.add(Point(x1, y1))
     }
-    circle1 = circleByDiameter(diameter(*points))
-    println(circle1)
+
     circle1 = circleByDiameter(diameter(*points1.toTypedArray()))
-    println(circle1)
+    println("$circle1-----------------------------------------------------------------\n")
 
     for (point in points) {
         if (!circle1.contains(point)) mark = false
     }
     if (mark) circle = circle1
     for (i in 0..points1.size - 3) {
-        for (j in i + 1..points1.size - 2) {
-            loop1@ for (l in j + 1..points1.size - 1) {
+        for (j in 1..points1.size - 2) {
+            loop1@ for (l in 2..points1.size - 1) {
                 if (points1[i] == points1[j] || points1[i] == points1[l] || points1[j] == points1[l]) continue@loop1
                 if (points1[i].x == points1[j].x && points1[j].x == points1[l].x ||
                     points1[i].y == points1[j].y && points1[j].y == points1[l].y
                 ) continue@loop1
                 circle1 = circleByThreePoints(points1[i], points1[j], points1[l])
+
                 mark = true
                 for (point in points1) {
 
@@ -310,6 +310,7 @@ fun minContainingCircle(vararg points: Point): Circle {
                 }
                 if (mark && circle1.radius < circle.radius) {
                     circle = circle1
+                    println(circle1)
                 }
             }
         }
@@ -351,9 +352,22 @@ fun main() {
 
     println(
         minContainingCircle(
-            Point(0.2319254175260287, 0.3158488448893153),
-            Point(-632.0, -632.0), Point(0.30661158620299933, 2.220446049250313e-16),
-            Point(0.3089653556777473, 5e-324)
+            Point(-2.220446049250313e-16, 0.3130934701287781),
+            Point(0.3381973052525965, -632.0),
+            Point(0.10653736490404708, -632.0),
+            Point(0.0, 0.640137034643983),
+            Point(0.48791457851101105, -632.0),
+            Point(0.059010924995814285, 0.05406885896003022),
+            Point(0.03001651578450626, 0.0),
+            Point(2.220446049250313e-16, -5e-324),
+            Point(0.3849899900479675, 0.37959802800079656),
+            Point(5e-324, 0.0),
+            Point(0.0, 2.220446049250313e-16),
+            Point(-632.0, 0.0),
+            Point(0.25128973274327127, -632.0),
+            Point(-5e-324, 0.8631091253323593),
+            Point(0.0, -2.220446049250313e-16),
+            Point(0.11952187236450573, 0.06499350938384507)
         )
     )
 }
