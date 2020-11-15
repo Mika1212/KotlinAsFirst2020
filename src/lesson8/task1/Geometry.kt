@@ -278,7 +278,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     val scale = 10.0.pow(14.0)
     val scale1 = 10.0.pow(-14.0)
     val points1 = mutableListOf<Point>()
-    println(-5e-324 * scale1 * scale)
+
     for ((x, y) in points) {
         var x1 = x * scale1 * scale
         var y1 = y * scale1 * scale
@@ -288,19 +288,15 @@ fun minContainingCircle(vararg points: Point): Circle {
     }
 
     circle1 = circleByDiameter(diameter(*points))
-    println("$circle1-----------------------------------------------------------------\n")
 
-    for (point in points) {
+    for (point in points)
         if (!circle1.contains(point)) mark = false
-        println(circle1.contains(point))
-        println(point)
-    }
-    println(circle1.center.distance(points[1]))
+
     var p = 0
     if (mark) circle = circle1
     for (i in 0..points1.size - 3) {
-        for (j in 1..points1.size - 2) {
-            loop1@ for (l in 2..points1.size - 1) {
+        for (j in i+1..points1.size - 2) {
+            loop1@ for (l in j+1..points1.size - 1) {
                 p++
                 if (points1[i] == points1[j] || points1[i] == points1[l] || points1[j] == points1[l]) continue@loop1
                 if (points1[i].x == points1[j].x && points1[j].x == points1[l].x ||
@@ -309,81 +305,13 @@ fun minContainingCircle(vararg points: Point): Circle {
                 circle1 = circleByThreePoints(points1[i], points1[j], points1[l])
 
                 mark = true
-                for (point in points1) {
-
+                for (point in points1)
                     if (!circle1.contains(point)) mark = false
-                }
-                if (mark && circle1.radius < circle.radius) {
-                    circle = circle1
-                    println(circle1)
-                    println("${points1[i]},${points1[j]}, ${points1[l]}")
 
-                }
+                if (mark && circle1.radius < circle.radius)
+                    circle = circle1
             }
         }
     }
-    println(p)
     return circle
-}
-
-fun main() {
-
-    println(minContainingCircle(Point(0.9203249127875576, -632.0), Point(-632.0, 0.1020956978426798)))
-
-    println(
-        minContainingCircle(
-            Point(-632.0, 0.4996020038647635),
-            Point(0.8355866076453843, 0.5029234552600096),
-            Point(0.6155478370935278, 0.8619603931390374),
-            Point(-5e-324, -5e-324),
-            Point(0.0, 0.09277087530724781),
-            Point(0.1478649787258971, -632.0),
-            Point(0.0, -632.0),
-            Point(-632.0, -5e-324),
-            Point(0.8053937084009063, 0.0019687129991458052),
-            Point(-632.0, -632.0),
-            Point(0.4433137810854201, 0.07964445269963882),
-            Point(0.0, 0.8926883510712647),
-            Point(5e-324, -632.0),
-            Point(0.0, 0.17122538452639313),
-            Point(0.9927422804155475, 0.8976452945189333),
-            Point(0.0, -632.0),
-            Point(-2.220446049250313e-16, 2.220446049250313e-16),
-            Point(0.819457066657828, -2.220446049250313e-16),
-            Point(-632.0, -5e-324),
-            Point(0.4256629706922892, -2.220446049250313e-16),
-            Point(2.220446049250313e-16, 0.5849519644026278),
-            Point(2.220446049250313e-16, -632.0),
-            Point(0.0, 0.8865192009976353),
-            Point(0.0, 0.0),
-            Point(0.4616440117259881, -2.220446049250313e-16)
-        )
-    )
-
-    println(
-        minContainingCircle(
-            Point(-2.220446049250313e-16, 0.3130934701287781),
-            Point(0.3381973052525965, -632.0),
-            Point(0.10653736490404708, -632.0),
-            Point(0.0, 0.640137034643983),
-
-            Point(0.48791457851101105, -632.0),
-
-            Point(0.059010924995814285, 0.05406885896003022),
-            Point(0.03001651578450626, 0.0),
-            Point(2.220446049250313e-16, -5e-324),
-            Point(0.3849899900479675, 0.37959802800079656),
-            Point(5e-324, 0.0),
-            Point(0.0, 2.220446049250313e-16),
-
-            Point(-632.0, 0.0),
-
-            Point(0.25128973274327127, -632.0),
-
-            Point(-5e-324, 0.8631091253323593),
-
-            Point(0.0, -2.220446049250313e-16),
-            Point(0.11952187236450573, 0.06499350938384507)
-        )
-    )
 }

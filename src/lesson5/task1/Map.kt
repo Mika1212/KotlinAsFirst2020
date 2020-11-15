@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import kotlin.math.max
+
 /**
  * Пример
  *
@@ -195,7 +197,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
         } else
             result1[name] = Pair(price, 1)
     }
-    return result1.mapValues { it.value.first/it.value.second  }
+    return result1.mapValues { it.value.first / it.value.second }
 }
 
 /**
@@ -395,5 +397,45 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val weight = mutableListOf<Int>()
+    val cost = mutableListOf<Int>()
+    val result = mutableSetOf<String>()
+
+    val array = Array(treasures.size + 1) { IntArray(capacity + 1) }
+    for (i in 0..treasures.size) {
+        for (j in 0..treasures.size)
+            array[i][j] = 0
+    }
+
+    val answerHelper = mutableListOf<String>()
+    for ((key) in treasures)
+        answerHelper.add(key)
+
+    for ((key, values) in treasures) {
+        weight += values.first
+        cost += values.second
+    }
+
+    for (i in 0..treasures.size) {
+        for (j in 0..capacity) {
+            if (j >= weight[i - 1]) array[i][j] =
+                max(array[i - 1][j], array[i - 1][j - weight[i - 1]] + cost[i - 1])
+            else array[i][j] = array[i - 1][j]
+        }
+    }
+
+    fun answerHelper(i: Int, j: Int): Int {
+        if (array[i][j] == 0) return 0
+        if (array[i - 1][j] == array[i][j]) answerHelper(i - 1, j)
+        else {
+            answerHelper(i - 1, j - weight[i - 1])
+            result.add(answerHelper[i - 1])
+        }
+        return 0
+    }
+    answerHelper(answerHelper.size, capacity)
+    return result
+}
+
 
