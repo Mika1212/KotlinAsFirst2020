@@ -403,10 +403,11 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     val result = mutableSetOf<String>()
 
     val array = Array(treasures.size + 1) { IntArray(capacity + 1) }
-    for (i in 0..treasures.size) {
-        for (j in 0..treasures.size)
-            array[i][j] = 0
-    }
+    for (i in 0..treasures.size)
+        array[i][0] = 0
+
+    for (j in 0..treasures.size)
+        array[0][j] = 0
 
     val answerHelper = mutableListOf<String>()
     for ((key) in treasures)
