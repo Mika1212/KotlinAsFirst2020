@@ -3,10 +3,6 @@
 package lesson8.task1
 
 import lesson1.task1.sqr
-import lesson2.task2.pointInsideCircle
-import lesson4.task1.center
-import java.lang.Double.MAX_VALUE
-import java.text.DecimalFormat
 import kotlin.math.*
 
 // Урок 8: простые классы
@@ -274,81 +270,28 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  */
 fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty()) throw java.lang.IllegalArgumentException()
-    val scale = 10.0.pow(12.0)
-    val points1 = mutableListOf<Point>()
+    if (points.size == 1) return Circle(points[0], 0.0)
+    var circle1 = Circle(Point(0.0, 0.0), 0.0)
+    var circle = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
+    for (i in 0..points.size - 3) {
+        for (j in 1..points.size - 2) {
+            loop1@ for (l in 2..points.size - 1) {
+                if (points[i] == points[j] || points[i] == points[l] || points[j] == points[l]) continue@loop1
 
-    var maxX = Pair(Point(Double.MIN_VALUE, Double.MIN_VALUE), 0)
-    var maxY = Pair(Point(Double.MIN_VALUE, Double.MIN_VALUE), 0)
-    var minX = Pair(Point(Double.MAX_VALUE, Double.MAX_VALUE), 0)
-    var minY = Pair(Point(Double.MAX_VALUE, Double.MAX_VALUE), 0)
-    val dropped = mutableSetOf<Point>()
-    for (point in points) {
-        when {
-            point.x > maxX.first.x -> {
-                if (maxX.second > 0) dropped.add(maxX.first)
-                maxX = Pair(point, 1)
-            }
-            point.x < minX.first.x -> {
-                if (minX.second > 0) dropped.add(minX.first)
-                minX = Pair(point, 1)
-            }
-            point.y > maxY.first.y -> {
-                if (maxY.second > 0) dropped.add(maxY.first)
-                maxY = Pair(point, 1)
-            }
-            point.y < minY.first.y -> {
-                if (minY.second > 0) dropped.add(minY.first)
-                minY = Pair(point, 1)
+                circle1 = circleByThreePoints(points[i], points[j], points[l])
+                var mark = true
+                for (point in points) {
+                    println(point)
+                    if (!circle1.contains(point)) mark = false
+                }
+                if (mark && circle1.radius < circle.radius) {
+                    println("${points[i]} ${points[j]} ${points[l]} ''''''''''''''''")
+                    circle = circle1
+                }
             }
         }
     }
-    while (true) {
-        val dropped1 = dropped.toMutableSet()
-        for (point in dropped1) {
-            when {
-                point.x > maxX.first.x -> {
-                    if (maxX.second > 0) dropped.add(maxX.first)
-                    dropped.remove(point)
-                    maxX = Pair(point, 1)
-                }
-                point.x < minX.first.x -> {
-                    if (maxX.second > 0) dropped.add(maxX.first)
-                    dropped.remove(point)
-                    minX = Pair(point, 1)
-                }
-                point.y > maxY.first.y -> {
-                    if (maxX.second > 0) dropped.add(maxX.first)
-                    dropped.remove(point)
-                    maxY = Pair(point, 1)
-                }
-                point.y < minY.first.y -> {
-                    if (maxX.second > 0) dropped.add(maxX.first)
-                    dropped.remove(point)
-                    minY = Pair(point, 1)
-                }
-                else -> dropped.remove(point)
-            }
-        }
-        if (dropped.isEmpty()) break
-    }
-
-    val list = mutableSetOf(maxX, minX, maxY, minY).filter { it.second > 0 }
-    val sum = list.size
-    println(list)
-    println(sum)
-    when (sum) {
-        1 -> return Circle(list[0].first, 0.0)
-        2 -> return circleByDiameter(Segment(list[0].first, list[1].first))
-        3 -> return circleByThreePoints(list[0].first, list[1].first, list[2].first)
-    }
-    val center = if (maxX.first.distance(minX.first) > maxY.first.distance(minY.first))
-        Point((maxX.first.x + minX.first.x) * 0.5, (maxX.first.y + minX.first.y) * 0.5)
-    else Point((maxY.first.x + minY.first.x) * 0.5, (maxY.first.y + minY.first.y) * 0.5)
-    val a = Circle(
-        center, if (center.distance(maxX.first) > center.distance(maxY.first)) center.distance(maxX.first)
-        else center.distance(maxY.first)
-    )
-    println(a)
-    return a
+    println(circle)
+    return circle
 }
 
