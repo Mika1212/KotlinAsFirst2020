@@ -271,14 +271,13 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
 fun minContainingCircle(vararg points: Point): Circle {
     if (points.isEmpty()) throw java.lang.IllegalArgumentException()
     if (points.size == 1) return Circle(points[0], 0.0)
-    var circle1 = Circle(Point(0.0, 0.0), 0.0)
     var circle = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
+    var circle1 = Circle(Point(0.0, 0.0), 0.0)
     var mark = true
-        for (i in 0..points.size - 3) {
+    for (i in 0..points.size - 3) {
         for (j in 1..points.size - 2) {
             loop1@ for (l in 2..points.size - 1) {
                 if (points[i] == points[j] || points[i] == points[l] || points[j] == points[l]) continue@loop1
-
                 circle1 = circleByThreePoints(points[i], points[j], points[l])
                 mark = true
                 for (point in points) {
@@ -296,7 +295,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     circle1 = circleByDiameter(diameter(*points))
     for (point in points)
         if (!circle1.contains(point)) mark = false
-    if (mark && circle1.radius<circle.radius) circle = circle1
+    if (mark && circle1.radius < circle.radius) circle = circle1
     println(circle)
     return circle
 }
