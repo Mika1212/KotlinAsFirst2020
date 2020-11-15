@@ -432,7 +432,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             answerHelper(i - 1, j - weight[i - 1])
             result.add(answerHelper[i - 1])
         }
-        return -1
+        return i
     }
     answerHelper(answerHelper.size, capacity)
     return result
