@@ -188,7 +188,7 @@ class Line private constructor(val b: Double, val angle: Double) {
         return result
     }
 
-    override fun toString() = "Line(${cos(angle)} * y = ${sin(angle)} * x + $b),$angle"
+    override fun toString() = "Line(${cos(angle)} * y = ${sin(angle)} * x + $b)"
 }
 
 /**
@@ -274,29 +274,34 @@ fun minContainingCircle(vararg points: Point): Circle {
     var circle = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
     var circle1 = Circle(Point(0.0, 0.0), 0.0)
     var mark = true
-    for (i in 0..points.size - 3) {
-        for (j in 1..points.size - 2) {
-            loop1@ for (l in 2..points.size - 1) {
-                if (points[i] == points[j] || points[i] == points[l] || points[j] == points[l]) continue@loop1
-                circle1 = circleByThreePoints(points[i], points[j], points[l])
+    val scale = 10.0.pow(14.0)
+    val points1 = mutableListOf<Point>()
+    for ((x, y) in points)
+        points1.add(Point(x / scale * scale, y / scale * scale))
+    circle1 = circleByDiameter(diameter(*points))
+    for (point in points1)
+        if (!circle1.contains(point)) mark = false
+
+    if (mark && circle1.radius < circle.radius) circle = circle1
+    for (i in 0..points1.size - 3) {
+        for (j in 1..points1.size - 2) {
+            loop1@ for (l in 2..points1.size - 1) {
+                if (points1[i] == points1[j] || points1[i] == points1[l] || points1[j] == points1[l]) continue@loop1
+                if (points1[i].x == points1[j].x && points1[j].x == points1[l].x ||
+                    points1[i].y == points1[j].y && points1[j].y == points1[l].y
+                ) continue@loop1
+                circle1 = circleByThreePoints(points1[i], points1[j], points1[l])
                 mark = true
-                for (point in points) {
+                for (point in points1) {
                     println(point)
                     if (!circle1.contains(point)) mark = false
                 }
                 if (mark && circle1.radius < circle.radius) {
-                    println("${points[i]} ${points[j]} ${points[l]} ''''''''''''''''")
                     circle = circle1
                 }
             }
         }
     }
-    mark = true
-    circle1 = circleByDiameter(diameter(*points))
-    for (point in points)
-        if (!circle1.contains(point)) mark = false
-    if (mark && circle1.radius < circle.radius) circle = circle1
-    println(circle)
+
     return circle
 }
-
