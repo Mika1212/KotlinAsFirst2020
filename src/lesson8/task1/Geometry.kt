@@ -277,7 +277,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     val scale = 10.0.pow(14.0)
     val scale1 = 10.0.pow(-14.0)
     val points1 = mutableListOf<Point>()
-    println(0.8355866076453843 * scale1 * scale)
+    println(0.8355866076453843e-300 * scale1 * scale)
     for ((x, y) in points) {
         var x1 = x * scale1 * scale
         var y1 = y * scale1 * scale
