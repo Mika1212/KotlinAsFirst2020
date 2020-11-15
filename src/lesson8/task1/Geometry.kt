@@ -278,9 +278,9 @@ fun minContainingCircle(vararg points: Point): Circle {
     val points1 = mutableListOf<Point>()
     for ((x, y) in points)
         points1.add(Point(x / scale * scale, y / scale * scale))
-    circle1 = circleByDiameter(diameter(*points1.toTypedArray()))
-
-    for (point in points1) {
+    circle1 = circleByDiameter(diameter(*points))
+    println(circle1)
+    for (point in points) {
         if (!circle1.contains(point)) mark = false
     }
     if (mark) circle = circle1
@@ -304,7 +304,7 @@ fun minContainingCircle(vararg points: Point): Circle {
         }
     }
     for (point in points)
-        println(Circle(Point(-315.608143294381,-316.0),447.16865609032675).contains(point))
+        println(circle.contains(point))
     return circle
 }
 
