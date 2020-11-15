@@ -345,9 +345,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     var sNumber = 0
     val reader = mutableListOf<String>()
     var mark = 0
-    val actual = File(inputName).readText().replace(Regex("[\\t]"), " ")
+    val actual = File(inputName).readText().replace(Regex("""[\t]"""), " ")
         .replace(Regex("""(\n\s*\n)"""), "☠☠☠☠☠")
-        .replace(Regex("[\\t\\n]"), " ")
+        .replace(Regex("""[\t\n]"""), " ")
     loopQ@ for ((i, letter) in actual.withIndex()) {
         if (letter == ' ') {
             if (mark != 0) continue@loopQ
@@ -364,16 +364,18 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     }
 
     val read1 = reader.toMutableList()
-
-    for ((i, letter) in reader.reversed().withIndex()) {
-        if (letter == "</p>\n<p>") read1.removeAt(reader.lastIndex - i)
-        if (letter != " ") break
+    if (reader.size > 1) {
+        for (letter in reader) {
+            if (letter == "</p>\n<p>") read1.removeFirst()
+            if (letter != " ") break
+        }
     }
-    for (letter in reader) {
-        if (letter == "</p>\n<p>") read1.removeFirst()
-        if (letter != " ") break
+    if (reader.size > 1) {
+        for ((i, letter) in reader.reversed().withIndex()) {
+            if (letter == "</p>\n<p>") read1.removeAt(reader.lastIndex - i)
+            if (letter != " ") break
+        }
     }
-
     val read = ";" + read1.joinToString(separator = "") + ";"
 
     writer.write("<html>\n" + "<body>\n" + "<p>\n")
@@ -539,7 +541,7 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
  *
  */
 fun markdownToHtml(inputName: String, outputName: String) {
-    TODO()
+  TODO()
 }
 
 /**
@@ -596,3 +598,4 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
+
