@@ -406,16 +406,16 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     for (i in 0..treasures.size)
         array[i][0] = 0
 
-    for (j in 0..treasures.size)
-        array[0][j] = 0
+    for (i in 0..treasures.size)
+        array[0][i] = 0
 
     val answerHelper = mutableListOf<String>()
     for ((key) in treasures)
         answerHelper.add(key)
 
     for ((key, values) in treasures) {
-        weight += values.first
-        cost += values.second
+        weight.add(values.first)
+        cost.add(values.second)
     }
 
     for (i in 1..treasures.size) {
@@ -438,5 +438,3 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     answerHelper(answerHelper.size, capacity)
     return result
 }
-
-
