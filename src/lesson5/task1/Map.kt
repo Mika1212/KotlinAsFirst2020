@@ -406,7 +406,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     for (i in 0..treasures.size)
         array[i][0] = 0
 
-    for (i in 0..treasures.size)
+    for (i in 0..capacity)
         array[0][i] = 0
 
     val answerHelper = mutableListOf<String>()
