@@ -417,8 +417,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         cost += values.second
     }
 
-    for (i in 0..treasures.size) {
-        for (j in 0..capacity) {
+    for (i in 1..treasures.size) {
+        for (j in 1..capacity) {
             if (j >= weight[i - 1]) array[i][j] =
                 max(array[i - 1][j], array[i - 1][j - weight[i - 1]] + cost[i - 1])
             else array[i][j] = array[i - 1][j]
@@ -432,7 +432,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             answerHelper(i - 1, j - weight[i - 1])
             result.add(answerHelper[i - 1])
         }
-        return 0
+        return -1
     }
     answerHelper(answerHelper.size, capacity)
     return result
