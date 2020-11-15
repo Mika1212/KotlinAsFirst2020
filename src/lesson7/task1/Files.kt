@@ -378,8 +378,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     }
     val read = ";" + read1.joinToString(separator = "") + ";"
 
-    writer.write("<html>\n" + "<body>\n" + "<p>\n")
-    if (read.length > 2)
+    writer.write("<html>\n<body>\n<p>\n")
+    if (read1.size > 1)
         loop@ for ((i, letter) in read.withIndex()) {
             when {
                 letter == '*' && read[i + 1] != '*' && read[i - 1] != '*' && iNumber % 2 == 0 -> {
@@ -426,7 +426,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 else -> writer.write(letter.toString())
             }
         }
-    writer.write("</p>\n" + "</body>\n" + "</html>\n")
+    writer.write("</p>\n</body>\n</html>\n")
     writer.close()
 }
 
@@ -541,7 +541,33 @@ fun markdownToHtmlLists(inputName: String, outputName: String) {
  *
  */
 fun markdownToHtml(inputName: String, outputName: String) {
-  TODO()
+    val writer = File(outputName).bufferedWriter()
+    val result = mutableListOf<String>()
+    result.add("<html>\n<body>\n<p>\n")
+    val text = mutableListOf<String>()
+    for (line in File(inputName).readLines())
+        text.add(
+            line.replace(Regex("""[\t]"""), "    ")
+                .replace(Regex("""[\n]"""), "\n")
+        )
+    var tab = 0
+    for (line in text) {
+        var line1 = mutableListOf<String>()
+        if (line[0] == '*') {
+            line1.add("<ul>\n<li>")
+            tab = 0
+        }
+        if (line[0] == ' ') {
+            for (i in 0..line.length - 1) {
+                tab++
+                if (line[i] != ' ') break
+            }
+        }
+
+        result.add(line1.joinToString(separator = ""))
+    }
+    writer.write(result.joinToString(separator = "\n"))
+    writer.close()
 }
 
 /**
@@ -596,6 +622,30 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  */
 
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    var lhv1 = lhv
+    var counter = 0
+    var tab = 0
+    var helperName = 0
+    var mark = false
+    var markChange = 0
+    writer.write(" $lhv | $rhv\n")
+    if (lhv < rhv) {
+        writer.write("-0")
+        for (i in 1..digitNumber(lhv) + 2) writer.write(" ")
+        writer.write("0\n")
+        writer.write("--\n ")
+    }
+
+    while (lhv1 >= rhv) {
+
+
+        lhv1 = 0
+    }
+
+    markChange = if (counter == 1) 1 else 0
+
+    writer.write("$lhv1")
+    writer.close()
 }
 
