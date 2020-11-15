@@ -247,10 +247,11 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val scale = 10.0.pow(12.0)
-    val a1 = Point(a.x / scale * scale, a.y / scale * scale)
-    val b1 = Point(b.x / scale * scale, b.y / scale * scale)
-    val c1 = Point(c.x / scale * scale, c.y / scale * scale)
+    val scale = 10.0.pow(14.0)
+    val scale1 = 10.0.pow(-14.0)
+    val a1 = Point(a.x * scale1 * scale, a.y * scale1 * scale)
+    val b1 = Point(b.x * scale1 * scale, b.y * scale1 * scale)
+    val c1 = Point(c.x * scale1 * scale, c.y * scale1 * scale)
     return Circle(
         bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(b1, a1)),
         bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(b1, a1)).distance(a1)
@@ -277,7 +278,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     val scale = 10.0.pow(14.0)
     val scale1 = 10.0.pow(-14.0)
     val points1 = mutableListOf<Point>()
-    println(0.8355866076453843e-300 * scale1 * scale)
+    println(-5e-324 * scale1 * scale)
     for ((x, y) in points) {
         var x1 = x * scale1 * scale
         var y1 = y * scale1 * scale
@@ -287,6 +288,9 @@ fun minContainingCircle(vararg points: Point): Circle {
     }
     circle1 = circleByDiameter(diameter(*points))
     println(circle1)
+    circle1 = circleByDiameter(diameter(*points1.toTypedArray()))
+    println(circle1)
+
     for (point in points) {
         if (!circle1.contains(point)) mark = false
     }
@@ -298,7 +302,6 @@ fun minContainingCircle(vararg points: Point): Circle {
                 if (points1[i].x == points1[j].x && points1[j].x == points1[l].x ||
                     points1[i].y == points1[j].y && points1[j].y == points1[l].y
                 ) continue@loop1
-                println("${points1[i]} ${points1[j]} ${points1[l]}")
                 circle1 = circleByThreePoints(points1[i], points1[j], points1[l])
                 mark = true
                 for (point in points1) {
@@ -311,8 +314,6 @@ fun minContainingCircle(vararg points: Point): Circle {
             }
         }
     }
-    for (point in points)
-        println(circle.contains(point))
     return circle
 }
 
