@@ -274,7 +274,7 @@ fun minContainingCircle(vararg points: Point): Circle {
 
     for (i in 0..points.size - 3) {
         for (j in i + 1..points.size - 2) {
-            loop1@ for (l in j + 1..points.size - 1) {
+            loop1@ for (l in j + 1 until points.size) {
                 if (points[i] == points[j] || points[i] == points[l] || points[j] == points[l]) continue@loop1
                 if (points[i].x == points[j].x && points[j].x == points[l].x ||
                     points[i].y == points[j].y && points[j].y == points[l].y
