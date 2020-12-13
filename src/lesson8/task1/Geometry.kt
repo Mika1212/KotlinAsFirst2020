@@ -243,7 +243,6 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-
 fun scale(a: Point): Point {
     val scale = 10.0.pow(14.0)
     val scale1 = 10.0.pow(-14.0)
