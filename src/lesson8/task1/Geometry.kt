@@ -81,7 +81,7 @@ data class Circle(val center: Point, val radius: Double) {
      */
     fun distance(other: Circle): Double {
         val result = sqrt(sqr(center.x - other.center.x) + sqr(center.y - other.center.y))
-        return if (result < 0.0) 0.0 else result
+        return if (result - radius < 0.0) 0.0 else result
     }
 
     /**
@@ -120,7 +120,6 @@ fun diameter(vararg points: Point): Segment {
             result[arg.distance(arg1)] = Pair(arg, arg1)
     }
     if (set.size < 2) throw IllegalArgumentException()
-    max = points[0].distance(points[1])
     var a = points[0]
     var b = points[1]
     for ((distance, pair) in result)
@@ -244,10 +243,26 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = Circle(
-    bisectorByPoints(c, b).crossPoint(bisectorByPoints(b, a)),
-    bisectorByPoints(c, b).crossPoint(bisectorByPoints(b, a)).distance(a)
-)
+
+fun scale(a: Point): Point {
+    val scale = 10.0.pow(14.0)
+    val scale1 = 10.0.pow(-14.0)
+    var x = a.x * scale1 * scale
+    var y = a.y * scale1 * scale
+    if (abs(x) == 0.0) x = 0.0
+    if (abs(y) == 0.0) y = 0.0
+    return Point(x, y)
+}
+
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val a1 = scale(a)
+    val b1 = scale(b)
+    val c1 = scale(c)
+    return Circle(
+        bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(b1, a1)),
+        bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(b1, a1)).distance(a1)
+    )
+}
 
 /**
  * Очень сложная (10 баллов)
@@ -266,23 +281,27 @@ fun minContainingCircle(vararg points: Point): Circle {
     var circle = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
     var circle1 = Circle(Point(0.0, 0.0), 0.0)
     var mark = true
+    val points1 = mutableListOf<Point>()
+
+    for (point in points)
+        points1.add(scale(point))
 
     circle1 = circleByDiameter(diameter(*points))
     for (point in points)
         if (!circle1.contains(point)) mark = false
     if (mark) circle = circle1
 
-    for (i in 0..points.size - 3) {
-        for (j in i + 1..points.size - 2) {
-            loop1@ for (l in j + 1 until points.size) {
-                if (points[i] == points[j] || points[i] == points[l] || points[j] == points[l]) continue@loop1
-                if (points[i].x == points[j].x && points[j].x == points[l].x ||
-                    points[i].y == points[j].y && points[j].y == points[l].y
+    for (i in 0..points1.size - 3) {
+        for (j in i + 1..points1.size - 2) {
+            loop1@ for (l in j + 1..points1.size - 1) {
+                if (points1[i] == points1[j] || points1[i] == points1[l] || points1[j] == points1[l]) continue@loop1
+                if (points1[i].x == points1[j].x && points1[j].x == points1[l].x ||
+                    points1[i].y == points1[j].y && points1[j].y == points1[l].y
                 ) continue@loop1
-                circle1 = circleByThreePoints(points[i], points[j], points[l])
+                circle1 = circleByThreePoints(points1[i], points1[j], points1[l])
 
                 mark = true
-                for (point in points)
+                for (point in points1)
                     if (!circle1.contains(point)) mark = false
 
                 if (mark && circle1.radius < circle.radius)
