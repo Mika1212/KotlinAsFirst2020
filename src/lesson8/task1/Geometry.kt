@@ -79,11 +79,10 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double = if (sqrt(sqr(center.x - other.center.x) + sqr(center.y - other.center.y))
-        < radius + other.radius
-    )
-        0.0 else
-        sqrt(sqr(center.x - other.center.x) + sqr(center.y - other.center.y)) - radius - other.radius
+    fun distance(other: Circle): Double {
+        val result = sqrt(sqr(center.x - other.center.x) + sqr(center.y - other.center.y))
+        return if (result < 0.0) 0.0 else result
+    }
 
     /**
      * Тривиальная (1 балл)
@@ -117,12 +116,11 @@ fun diameter(vararg points: Point): Segment {
     val set = mutableSetOf<Point>()
     for (arg in points) {
         set.add(arg)
-        for (arg1 in points) {
+        for (arg1 in points)
             result[arg.distance(arg1)] = Pair(arg, arg1)
-            max = arg.distance(arg1)
-        }
     }
     if (set.size < 2) throw IllegalArgumentException()
+    max = points[0].distance(points[1])
     var a = points[0]
     var b = points[1]
     for ((distance, pair) in result)
@@ -246,17 +244,10 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val scale = 10.0.pow(14.0)
-    val scale1 = 10.0.pow(-14.0)
-    val a1 = Point(a.x * scale1 * scale, a.y * scale1 * scale)
-    val b1 = Point(b.x * scale1 * scale, b.y * scale1 * scale)
-    val c1 = Point(c.x * scale1 * scale, c.y * scale1 * scale)
-    return Circle(
-        bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(b1, a1)),
-        bisectorByPoints(c1, b1).crossPoint(bisectorByPoints(b1, a1)).distance(a1)
-    )
-}
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = Circle(
+    bisectorByPoints(c, b).crossPoint(bisectorByPoints(b, a)),
+    bisectorByPoints(c, b).crossPoint(bisectorByPoints(b, a)).distance(a)
+)
 
 /**
  * Очень сложная (10 баллов)
@@ -275,34 +266,23 @@ fun minContainingCircle(vararg points: Point): Circle {
     var circle = Circle(Point(0.0, 0.0), Double.MAX_VALUE)
     var circle1 = Circle(Point(0.0, 0.0), 0.0)
     var mark = true
-    val scale = 10.0.pow(14.0)
-    val scale1 = 10.0.pow(-14.0)
-    val points1 = mutableListOf<Point>()
-
-    for ((x, y) in points) {
-        var x1 = x * scale1 * scale
-        var y1 = y * scale1 * scale
-        if (abs(x1) == 0.0) x1 = 0.0
-        if (abs(y1) == 0.0) y1 = 0.0
-        points1.add(Point(x1, y1))
-    }
 
     circle1 = circleByDiameter(diameter(*points))
     for (point in points)
         if (!circle1.contains(point)) mark = false
     if (mark) circle = circle1
 
-    for (i in 0..points1.size - 3) {
-        for (j in i + 1..points1.size - 2) {
-            loop1@ for (l in j + 1..points1.size - 1) {
-                if (points1[i] == points1[j] || points1[i] == points1[l] || points1[j] == points1[l]) continue@loop1
-                if (points1[i].x == points1[j].x && points1[j].x == points1[l].x ||
-                    points1[i].y == points1[j].y && points1[j].y == points1[l].y
+    for (i in 0..points.size - 3) {
+        for (j in i + 1..points.size - 2) {
+            loop1@ for (l in j + 1..points.size - 1) {
+                if (points[i] == points[j] || points[i] == points[l] || points[j] == points[l]) continue@loop1
+                if (points[i].x == points[j].x && points[j].x == points[l].x ||
+                    points[i].y == points[j].y && points[j].y == points[l].y
                 ) continue@loop1
-                circle1 = circleByThreePoints(points1[i], points1[j], points1[l])
+                circle1 = circleByThreePoints(points[i], points[j], points[l])
 
                 mark = true
-                for (point in points1)
+                for (point in points)
                     if (!circle1.contains(point)) mark = false
 
                 if (mark && circle1.radius < circle.radius)
